@@ -7,9 +7,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "gl/glut.h"
-#include "gl/gl.h"
-#include "gl/glaux.h"
+#include <GL/glut.h>
+#include <GL/gl.h>
 #include "brick.h"
 #include "brickfield.h"
 #include "tet3d.h"
@@ -197,7 +196,6 @@ bool Tet3D::isBlockOk() const
 {
 	if (block == NULL) return true;
 
-	bool ok = true;
 	for (int z = 0; z < block->dimZ; z++)
 		for (int y = 0; y < block->dimY; y++)
 			for (int x = 0; x < block->dimX; x++)
@@ -599,7 +597,7 @@ void Tet3D::renderHUD() const
 	char cbuffer[7];
 
 	static const float dy1 = 0.24f;
-	static const float dy2 = dy1 / 2;
+	//static const float dy2 = dy1 / 2;
 	static const float dy3 = dy1 / 3;
 	static const float dy4 = dy1 / 4;
 	static const float dy5 = dy1 / 5;
@@ -612,27 +610,27 @@ void Tet3D::renderHUD() const
 
 	float y_hud = 1.0f - dy9;
 
-	sprintf_s(cbuffer, 7, " %c ", level <= 9 ? '0' + (char)level : 'x' );
+	snprintf(cbuffer, 7, " %c ", level <= 9 ? '0' + (char)level : 'x' );
 	MenuChar::drawString2D("level", x_hud, y_hud -= dy5, dy5);
 	MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy3, dy3);
 	y_hud -= dy4;
-	sprintf_s(cbuffer, 7, "%06d", score_count % 1000000);
+	snprintf(cbuffer, 7, "%06d", uint(score_count) % 1000000);
 	MenuChar::drawString2D(" score ", x_hud, y_hud -= dy7, dy7);
 	MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy6, dy6);
 	y_hud -= dy8;
-	sprintf_s(cbuffer, 7, "%06d", block_count);
+	snprintf(cbuffer, 7, "%06d", block_count);
 	MenuChar::drawString2D(" block ", x_hud, y_hud -= dy7, dy7);
 	MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy6, dy6);
 	y_hud -= dy8;
-	sprintf_s(cbuffer, 7, "%06d", cube_count);
+	snprintf(cbuffer, 7, "%06d", cube_count);
 	MenuChar::drawString2D(" cubes ", x_hud, y_hud -= dy7, dy7);
 	MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy6, dy6);
 	y_hud -= dy8;
-	sprintf_s(cbuffer, 7, "%06d", lines_count);
+	snprintf(cbuffer, 7, "%06d", lines_count);
 	MenuChar::drawString2D(" layers ", x_hud, y_hud -= dy8, dy8);
 	MenuChar::drawString2D(cbuffer,  x_hud, y_hud -= dy6, dy6);
 	y_hud -= dy4;
-	sprintf_s(cbuffer, 7, "%1dx%1dx%2d", field->dimX, field->dimY, field->dimZ);
+	snprintf(cbuffer, 7, "%1dx%1dx%2d", field->dimX, field->dimY, field->dimZ);
 	MenuChar::drawString2D("  area  ", x_hud, y_hud -= dy8, dy8);
 	MenuChar::drawString2D(cbuffer,  x_hud, y_hud -= dy6, dy6);
 	y_hud -= dy8;
@@ -643,9 +641,9 @@ void Tet3D::renderHUD() const
 	switch (blockSet)
 	{
 	default:
-	case FLAT:     sprintf_s(cbuffer, 7, "%6s", " flat "); MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy6, dy6); break;
-	case BASIC:    sprintf_s(cbuffer, 7, "%5s",  "basic"); MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy5, dy5); break;
-	case EXTENDED: sprintf_s(cbuffer, 7, "%6s", "extend"); MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy6, dy6); break;
+	case FLAT:     snprintf(cbuffer, 7, "%6s", " flat "); MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy6, dy6); break;
+	case BASIC:    snprintf(cbuffer, 7, "%5s",  "basic"); MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy5, dy5); break;
+	case EXTENDED: snprintf(cbuffer, 7, "%6s", "extend"); MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy6, dy6); break;
 	}
 	y_hud -= dy4;
 
@@ -1152,5 +1150,3 @@ BrickField* Tet3D::createBlock()
 
 	return b;
 }
-
-//\\//\\

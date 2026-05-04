@@ -5,10 +5,9 @@
  * Datum: 05.06.2007.
  */
 
+#include <GL/glut.h>
+#include <GL/gl.h>
 #include "brick.h"
-
-#include "gl/glut.h"
-#include "gl/gl.h"
 
 GLuint Brick::texture = 0;
 GLuint Brick::listBlock = 0;
@@ -83,5 +82,3 @@ void Brick::draw() const
 
 	glEnable(GL_CULL_FACE);
 }
-
-//\\//\\

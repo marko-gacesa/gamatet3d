@@ -8,9 +8,8 @@
 #ifndef _COLOR_H_
 #define _COLOR_H_
 
-
-#include "gl/glut.h"
-#include "gl/gl.h"
+#include <GL/glut.h>
+#include <GL/gl.h>
 
 class Color
 {
@@ -40,5 +39,3 @@ public:
 };
 
 #endif
-
-//\\//\\

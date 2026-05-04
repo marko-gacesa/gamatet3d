@@ -5,12 +5,15 @@
  * Datum: 13.06.2007.
  */
 
+#include <cassert>
+#include <cstdio>
 #include <string.h>
+#include <GL/gl.h>
+#include <GL/glut.h>
 #include <math.h>
 #include "menu.h"
-#include "gl/gl.h"
-#include "gl/glut.h"
-#include "gl/glaux.h"
+
+#include "stb_image.h"
 
 float deg2rad = 0.01745329252f;
 float rad2deg = 57.2957795131f;
@@ -24,33 +27,31 @@ GLuint MenuChar::textures[37];
 
 void MenuChar::loadTextures()
 {
-	char* fname = "texture/char/_.bmp";
+	const char* fname = "texture/char/_.png";
+	char* name = strdup(fname);
 
 	glGenTextures(37, textures);
 
 	for (int i = 0; i < 37; i++)
 	{
-		AUX_RGBImageRec *image = NULL;
-
-		char* name = _strdup(fname);
-
 		if (i >=  1 && i <= 10) name[13] = '0' + i - 1;
 		if (i >= 11 && i <= 36) name[13] = 'a' + i - 11;
 
-		image = auxDIBImageLoad(name);
-		delete name;
+		int width, height, channels;
+		unsigned char* data = stbi_load(name, &width, &height, &channels, 0);
 
-		if (image == NULL) continue;
+		if (data == NULL) continue;
 
 		glBindTexture(GL_TEXTURE_2D, textures[i]);
 
-		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB8, image->sizeX, image->sizeY, GL_RGB, GL_UNSIGNED_BYTE, image->data);
+		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_INTENSITY8, width, height, GL_RED, GL_UNSIGNED_BYTE, data);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
-		if (image != NULL) delete image->data;
-		delete image;
+		stbi_image_free(data);
 	}
+
+	free(name);
 }
 
 void MenuChar::draw(char ch)
@@ -132,13 +133,13 @@ void MenuChar::draw2D(char ch, float x, float y, float d)
 	glEnd();
 }
 
-void MenuChar::drawString2D(char* s, float x, float y, float d)
+void MenuChar::drawString2D(const char* s, float x, float y, float d)
 {
 	for (; *s != '\0'; s++, x += d)
 		draw2D(*s, x, y, d);
 }
 
-void MenuChar::drawString2Dc(char* s, float y, float d)
+void MenuChar::drawString2Dc(const char* s, float y, float d)
 {
 	int l = (int)strlen(s);
 	float x = -l / 2.0f * d;
@@ -175,7 +176,7 @@ void MenuItem::draw()
 	for (int i = 0; i < length; i++, x += dx)
 	{
 		glPushMatrix();
-		glRotatef((i-length/2)*10*sin(phi*deg2rad), 1, 0, 0);
+		glRotatef((i-length/2.0)*10*sin(phi*deg2rad), 1, 0, 0);
 		MenuChar::draw(text[i]);
 		glPopMatrix();
 		glTranslatef(dx, 0, 0);
@@ -204,19 +205,17 @@ void Menu::loadTexture()
 {
 	glGenTextures(1, &texture);
 
-	AUX_RGBImageRec *image = NULL;
-
-	image = auxDIBImageLoad("texture/back.bmp");
-	if (image == NULL) return;
+	int width, height, channels;
+	unsigned char* data = stbi_load("texture/back.png", &width, &height, &channels, 0);
+	if (data == NULL) return;
 
 	glBindTexture(GL_TEXTURE_2D, texture);
 
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB8, image->sizeX, image->sizeY, GL_RGB, GL_UNSIGNED_BYTE, image->data);
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB8, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
-	if (image != NULL) delete image->data;
-	delete image;
+	stbi_image_free(data);
 }
 
 void Menu::add(MenuItem *item)
@@ -381,5 +380,3 @@ void Menu::drawHelp()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
 }
-
-//\\//\\

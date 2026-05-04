@@ -8,14 +8,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include "gl/glut.h"
-#include "gl/gl.h"
-#include "gl/glaux.h"
+#include <GL/glut.h>
+#include <GL/gl.h>
 
-#include "random.h"
 #include "timer.h"
 #include "tet3d.h"
 #include "menu.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 const int TIMER_PERIOD = 20; // milisekundi
 
@@ -46,7 +47,7 @@ private:
 public:
 
 	enum Modes { MODE_GAME, MODE_MENU, MODE_HELP };
-	
+
 	static Tet3D* tet;
 	static Menu* menu;
 
@@ -277,42 +278,42 @@ void Game::startMenu()
 // textures //
 //----------//
 
-bool LoadGLTexture(char* textureName, GLuint *texID)
+void LoadGLTexture(const char* textureName, GLuint *texID)
 {
-	bool status = false;
+	int width, height, channels;
+	unsigned char* data = stbi_load(textureName, &width, &height, &channels, 0);
+	if (data == NULL) return;
 
-	AUX_RGBImageRec *textureImage = 0;
+	glGenTextures(1, texID);
+	glBindTexture(GL_TEXTURE_2D, *texID);
 
-	if (textureImage = auxDIBImageLoad(textureName) )
-	{
-		status = true;
-
-		glGenTextures(1, texID);
-		glBindTexture(GL_TEXTURE_2D, *texID);
-
-		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB8, textureImage->sizeX, textureImage->sizeY, GL_RGB, GL_UNSIGNED_BYTE, textureImage->data);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-
-		if (textureImage != NULL) delete textureImage->data;
-		delete textureImage;
+	switch (channels) {
+	case 1:
+		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_INTENSITY8, width, height, GL_RED, GL_UNSIGNED_BYTE, data);
+		break;
+	case 3:
+		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB8, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
+		break;
 	}
 
-	return status;
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+	stbi_image_free(data);
 }
 
 void LoadTextures()
 {
-	LoadGLTexture("texture/brick.bmp", &Brick::texture);
-	LoadGLTexture("texture/wall.bmp", &WalledBrickField::texture);
+	LoadGLTexture("texture/brick.png", &Brick::texture);
+	LoadGLTexture("texture/wall.png", &WalledBrickField::texture);
 	MenuChar::loadTextures();
 	Menu::loadTexture();
 }
 
 void clean()
 {
-	//glDeleteTextures(1, &Brick::texture);
-	//glDeleteTextures(1, &WalledBrickField::texture);
+	if (Brick::texture != 0) glDeleteTextures(1, &Brick::texture);
+	if (WalledBrickField::texture != 0) glDeleteTextures(1, &WalledBrickField::texture);
 }
 
 //-----------------------//
@@ -323,7 +324,7 @@ void init_all()
 {
 	//*** init OpenGL ***//
 
-  glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClearColor(0.0, 0.0, 0.0, 0.0);
 	LoadTextures();
 
 	// shading
@@ -395,9 +396,9 @@ void reshape(int width, int height)
 
 void draw()
 {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  glLoadIdentity();
+	glLoadIdentity();
 
 	gluLookAt(
 		cameraD * cos(cameraV) * sin(cameraH), cameraD * sin(cameraV), cameraD * cos(cameraV) * cos(cameraH),
@@ -522,8 +523,8 @@ void mouse_motion(int x, int y)
 
 void mouse_action(int button, int state, int x, int y)
 {
-	int diffX = x - oldMouseX;
-	int diffY = y - oldMouseY;
+	//int diffX = x - oldMouseX;
+	//int diffY = y - oldMouseY;
 
 	switch(button)
 	{
@@ -683,9 +684,9 @@ int main(int argc, char *argv[])
 	glutKeyboardFunc(key_down);
 	glutSpecialFunc(special_key_down);
 
-	glutMouseFunc( mouse_action );
-	glutMotionFunc( mouse_motion );
-	glutPassiveMotionFunc( mouse_motion );
+	glutMouseFunc(mouse_action);
+	glutMotionFunc(mouse_motion);
+	glutPassiveMotionFunc(mouse_motion);
 
 	glutSetCursor(GLUT_CURSOR_FULL_CROSSHAIR);
 
@@ -701,5 +702,3 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
-
-//\\//\\

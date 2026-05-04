@@ -5,10 +5,9 @@
  * Datum: 09.06.2007.
  */
 
+#include <GL/glut.h>
+#include <GL/gl.h>
 #include "anim.h"
-
-#include "gl/glut.h"
-#include "gl/gl.h"
 
 //------//
 // Anim //
@@ -57,7 +56,6 @@ void AnimList::update()
 			curr = curr->next;
 			t->next = NULL;
 			delete t;
-	
 		}
 		else
 		{
@@ -95,5 +93,3 @@ void AnimObj::render()
 
 	glPopMatrix();
 }
-
-//\\//\\

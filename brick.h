@@ -8,11 +8,11 @@
 #ifndef _BRICK_H_
 #define _BRICK_H_
 
+#include <GL/glut.h>
+#include <GL/gl.h>
 #include "random.h"
 #include "anim.h"
 #include "color.h"
-#include "gl/glut.h"
-#include "gl/gl.h"
 
 class Brick : public AnimObj
 {
@@ -33,5 +33,3 @@ public:
 
 
 #endif
-
-//\\//\\

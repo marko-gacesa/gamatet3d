@@ -8,7 +8,6 @@
 #include <stdlib.h>
 #include "brick.h"
 #include "brickfield.h"
-#include "anim.h"
 
 //------------//
 // BrickField //
@@ -319,5 +318,3 @@ void WalledBrickField::draw() const
 	if (listWallCompiled) glCallList(listWall);
 	if (drawField) BrickField::draw();
 }
-
-//\\//\\

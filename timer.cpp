@@ -39,5 +39,3 @@ void Timer::addTime(float seconds)
 	else
 		time += (long)(ticksPerSecond * seconds);
 }
-
-//\\//\\

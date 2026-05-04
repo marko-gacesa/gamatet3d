@@ -13,8 +13,6 @@
 #include "timer.h"
 #include "random.h"
 
-#define NULL 0
-
 /*
 inline float deg2rad(float a) { return a * 0.01745329252f; }
 inline float rad2deg(float a) { return a * 57.2957795131f; }
@@ -46,7 +44,7 @@ protected:
 
 public:
 	Anim(float dur) : next(NULL), timer(), duration(dur), finished(false), timeLength(1.0f) { timer.start(); }
-	~Anim() { delete next; }
+	virtual ~Anim() { delete next; }
 
 	void update();
 	bool isFinished() const { return finished; }
@@ -159,6 +157,7 @@ private:
 	AnimObj(const AnimObj&); // prevent copy-construction
 public:
 	AnimObj() : anims() {}
+	virtual ~AnimObj() {}
 
 	AnimList anims;
 
@@ -169,5 +168,3 @@ public:
 
 
 #endif
-
-//\\//\\

@@ -36,8 +36,8 @@ private:
 	static const int NEXTBLOCKS = 10;
 	static const float NEXTBLOCKY;
 	BrickField* next[NEXTBLOCKS];
-	AnimList nextAnimList;
 	Timer timerNext;
+	AnimList nextAnimList;
 	float nextA;
 	float nextB;
 
@@ -130,5 +130,3 @@ public:
 
 
 #endif
-
-//\\//\\

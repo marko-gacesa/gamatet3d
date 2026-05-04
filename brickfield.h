@@ -34,7 +34,11 @@ public:
 		for (int i = 0; i < size; i++) field[i] = NULL;
 	}
 
-	~BrickField() { clear(); delete [] field; }
+	virtual ~BrickField()
+	{
+		clear();
+		delete [] field;
+	}
 
 	// vraca true ako su koordinate (x,y,z) validne
 	bool isInside(int x, int y, int z) const { return x >= 0 && x < dimX && y >= 0 && y < dimY && z >= 0 && z < dimZ; }
@@ -81,7 +85,7 @@ public:
 		listWallCompiled = false;
 		compileListWall();
 	}
-	~WalledBrickField()
+	virtual ~WalledBrickField()
 	{
 		if (listWallCompiled) glDeleteLists(listWall, 1);
 	}
@@ -95,5 +99,3 @@ public:
 
 
 #endif
-
-//\\//\\
