@@ -3,18 +3,16 @@
  *
  * Autor: Marko Gacesa
  * Datum: 13.06.2007.
+ * Datum: 05.05.2026.
  */
 
 #ifndef _MENU_H_
 #define _MENU_H_
 
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <GL/glut.h>
+#include <cstdio>
+#include <cstring>
 #include <GL/gl.h>
-#include "color.h"
 #include "timer.h"
 #include "tet3d.h"
 
@@ -43,10 +41,10 @@ protected:
 	int code;
 	friend class Menu;
 public:
-	MenuItem(int code, const char *str) : timer() {
+	MenuItem(const int code, const char *str) : timer() {
 		this->code = code;
-		prev = next = NULL;
-		if (str != NULL) text = strdup(str);
+		prev = next = nullptr;
+		if (str != nullptr) text = strdup(str);
 		phi = ang = 0.0f;
 		timer.start();
 	}
@@ -66,9 +64,10 @@ private:
 	int *data;
 	int value;
 public:
-	MenuItemSet(int code, const char *str, int *pdata, int val) : MenuItem(code, str), data(pdata), value(val) {}
-	virtual bool forceSelect() { return *data == value; }
-	virtual void action() { *data = value; }
+	MenuItemSet(const int code, const char *str, int *pdata, const int val)
+		: MenuItem(code, str), data(pdata), value(val) {}
+	bool forceSelect() override { return *data == value; }
+	void action() override { *data = value; }
 };
 
 class MenuItemSetBlock : public MenuItem
@@ -78,8 +77,8 @@ private:
 	Tet3D::BlockSet value;
 public:
 	MenuItemSetBlock(int code, const char *str, Tet3D::BlockSet *pdata, Tet3D::BlockSet val) : MenuItem(code, str), data(pdata), value(val) {}
-	virtual bool forceSelect() { return *data == value; }
-	virtual void action() { *data = value; }
+	bool forceSelect() override { return *data == value; }
+	void action() override { *data = value; }
 };
 
 class MenuItemAdv : public MenuItem
@@ -88,9 +87,10 @@ private:
 	void (*act)();
 	bool (*fSel)();
 public:
-	MenuItemAdv(int code, const char *str, void (*pAction)(), bool (*pForceSel)()) : MenuItem(code, str), act(pAction), fSel(pForceSel) {}
-	virtual bool forceSelect() { if (fSel != NULL) return fSel(); else return false; }
-	virtual void action() { if (act != NULL) act(); }
+	MenuItemAdv(const int code, const char *str, void (*pAction)(), bool (*pForceSel)())
+		: MenuItem(code, str), act(pAction), fSel(pForceSel) {}
+	bool forceSelect() override { if (fSel != nullptr) return fSel(); return false; }
+	void action() override { if (act != nullptr) act(); }
 };
 
 class MenuItemX : public MenuItem
@@ -99,12 +99,10 @@ private:
 	int *x;
 	char *title;
 public:
-	MenuItemX(int code, const char *s, int *xx) : MenuItem(code, NULL), x(xx), title(strdup(s))
-	{
-		text = new char[100];
-	}
-	virtual ~MenuItemX() { delete[] title; }
-	virtual void update() { snprintf(text, 100, "%s %d", title, *x); }
+	MenuItemX(const int code, const char *s, int *xx)
+		: MenuItem(code, nullptr), x(xx), title(strdup(s)) { text = new char[100]; }
+	~MenuItemX() override { delete[] title; }
+	void update() override { snprintf(text, 100, "%s %d", title, *x); }
 };
 
 class MenuItemXBlock : public MenuItem
@@ -113,12 +111,10 @@ private:
 	Tet3D::BlockSet *b;
 	char *title;
 public:
-	MenuItemXBlock(int code, const char *s, Tet3D::BlockSet *bb) : MenuItem(code, NULL), b(bb), title(strdup(s))
-	{
-		text = new char[100];
-	}
-	virtual ~MenuItemXBlock() { delete[] title; }
-	virtual void update() { snprintf(text, 100, "%s %c", title, Tet3D::getBlockSetCode(*b)); }
+	MenuItemXBlock(const int code, const char *s, Tet3D::BlockSet *bb)
+		: MenuItem(code, nullptr), b(bb), title(strdup(s)) { text = new char[100]; }
+	~MenuItemXBlock() override { delete[] title; }
+	void update() override { snprintf(text, 100, "%s %c", title, Tet3D::getBlockSetCode(*b)); }
 };
 
 class MenuItemWHDB : public MenuItem
@@ -128,19 +124,21 @@ private:
 	Tet3D::BlockSet *b;
 	char *title;
 public:
-	MenuItemWHDB(int code, const char *s, int *width, int *height, int *depth, Tet3D::BlockSet *bset) : MenuItem(code, NULL), w(width), h(height), d(depth), b(bset), title(strdup(s))
+	MenuItemWHDB(const int code, const char *s, int *width, int *height, int *depth, Tet3D::BlockSet *bset)
+		: MenuItem(code, nullptr), w(width), h(height), d(depth), b(bset), title(strdup(s))
 	{
 		text = new char[100];
 	}
-	virtual ~MenuItemWHDB() { delete[] title; }
-	virtual void update() { snprintf(text, 100, "%s %dx%dx%d%c", title, *w, *h, *d, Tet3D::getBlockSetCode(*b)); }
+	~MenuItemWHDB() override { delete[] title; }
+	void update() override { snprintf(text, 100, "%s %dx%dx%d%c", title, *w, *h, *d, Tet3D::getBlockSetCode(*b)); }
 };
 
 class MenuItemCustom : public MenuItemWHDB
 {
 public:
-	MenuItemCustom(int code, const char *s, int *width, int *height, int *depth, Tet3D::BlockSet *bset) : MenuItemWHDB(code, s, width, height, depth, bset) {}
-	virtual bool forceSelect() { return true; }
+	MenuItemCustom(const int code, const char *s, int *width, int *height, int *depth, Tet3D::BlockSet *bset)
+		: MenuItemWHDB(code, s, width, height, depth, bset) {}
+	bool forceSelect() override { return true; }
 };
 
 class Menu
@@ -150,7 +148,7 @@ private:
 	int count;
 	int code;
 public:
-	Menu(int cancelCode) : first(NULL), last(NULL), curr(NULL), count(0), code(cancelCode) {}
+	Menu(const int cancelCode) : first(nullptr), last(nullptr), curr(nullptr), count(0), code(cancelCode) {}
 	~Menu();
 
 	static GLuint texture;
@@ -159,8 +157,8 @@ public:
 	void add(MenuItem *item);
 
 	void start();
-	int activate();
-	int cancel() { return code; }
+	int activate() const;
+	int cancel() const { return code; }
 
 	void up();
 	void down();

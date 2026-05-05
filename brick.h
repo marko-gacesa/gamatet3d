@@ -3,14 +3,13 @@
  *
  * Autor: Marko Gacesa
  * Datum: 05.06.2007.
+ * Datum: 05.05.2026.
  */
 
 #ifndef _BRICK_H_
 #define _BRICK_H_
 
-#include <GL/glut.h>
 #include <GL/gl.h>
-#include "random.h"
 #include "anim.h"
 #include "color.h"
 
@@ -28,7 +27,7 @@ public:
 
 	Color color;
 
-	virtual void draw() const;
+	void draw() const override;
 };
 
 

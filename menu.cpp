@@ -3,14 +3,15 @@
  *
  * Autor: Marko Gacesa
  * Datum: 13.06.2007.
+ * Datum: 05.05.2026.
  */
 
 #include <cassert>
 #include <cstdio>
-#include <string.h>
+#include <cstring>
+#include <cmath>
 #include <GL/gl.h>
 #include <GL/glut.h>
-#include <math.h>
 #include "menu.h"
 
 #include "stb_image.h"
@@ -27,8 +28,8 @@ GLuint MenuChar::textures[37];
 
 void MenuChar::loadTextures()
 {
-	const char* fname = "texture/char/_.png";
-	char* name = strdup(fname);
+	auto fname = "texture/char/_.png";
+	auto name = strdup(fname);
 
 	glGenTextures(37, textures);
 
@@ -40,7 +41,7 @@ void MenuChar::loadTextures()
 		int width, height, channels;
 		unsigned char* data = stbi_load(name, &width, &height, &channels, 0);
 
-		if (data == NULL) continue;
+		if (data == nullptr) continue;
 
 		glBindTexture(GL_TEXTURE_2D, textures[i]);
 
@@ -112,7 +113,7 @@ void MenuChar::draw(char ch)
 	glEnd();
 }
 
-void MenuChar::draw2D(char ch, float x, float y, float d)
+void MenuChar::draw2D(const char ch, const float x, const float y, const float d)
 {
 	int tex = 0;
 
@@ -133,15 +134,15 @@ void MenuChar::draw2D(char ch, float x, float y, float d)
 	glEnd();
 }
 
-void MenuChar::drawString2D(const char* s, float x, float y, float d)
+void MenuChar::drawString2D(const char* s, const float x, const float y, const float d)
 {
-	for (; *s != '\0'; s++, x += d)
-		draw2D(*s, x, y, d);
+	for (auto xx = x; *s != '\0'; s++, xx += d)
+		draw2D(*s, xx, y, d);
 }
 
-void MenuChar::drawString2Dc(const char* s, float y, float d)
+void MenuChar::drawString2Dc(const char* s, const float y, const float d)
 {
-	int l = (int)strlen(s);
+	int l = static_cast<int>(strlen(s));
 	float x = -l / 2.0f * d;
 	for (; *s != '\0'; s++, x += d)
 		draw2D(*s, x, y, d);
@@ -153,7 +154,7 @@ void MenuChar::drawString2Dc(const char* s, float y, float d)
 
 void MenuItem::draw()
 {
-	if (text == NULL) return;
+	if (text == nullptr) return;
 
 	if (timer.getTime() > 0.1)
 	{
@@ -162,9 +163,9 @@ void MenuItem::draw()
 		phi += 1;
 	}
 
-	int length = (int)strlen(text);
+	const int length = static_cast<int>(strlen(text));
 
-	float dx = 2.2f * MenuChar::charDim;
+	const float dx = 2.2f * MenuChar::charDim;
 	float x = (1 - length) * dx / 2.0f;
 
 	glPushMatrix();
@@ -193,7 +194,7 @@ GLuint Menu::texture = 0;
 
 Menu::~Menu()
 {
-	while (first != NULL)
+	while (first != nullptr)
 	{
 		curr = first;
 		first = first->next;
@@ -207,7 +208,7 @@ void Menu::loadTexture()
 
 	int width, height, channels;
 	unsigned char* data = stbi_load("texture/back.png", &width, &height, &channels, 0);
-	if (data == NULL) return;
+	if (data == nullptr) return;
 
 	glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -220,11 +221,11 @@ void Menu::loadTexture()
 
 void Menu::add(MenuItem *item)
 {
-	if (item == NULL) return;
+	if (item == nullptr) return;
 
 	count++;
 
-	if (first == NULL)
+	if (first == nullptr)
 		first = last = curr = item;
 	else
 	{
@@ -236,14 +237,14 @@ void Menu::add(MenuItem *item)
 
 void Menu::start()
 {
-	if (first == NULL) return;
+	if (first == nullptr) return;
 
 	MenuItem* k;
 
-	for (k = first; k != NULL; k = k->next)
+	for (k = first; k != nullptr; k = k->next)
 		k->update();
 
-	for (k = first; k != NULL; k = k->next)
+	for (k = first; k != nullptr; k = k->next)
 		if (k->forceSelect())
 		{
 			curr = k;
@@ -251,7 +252,7 @@ void Menu::start()
 		}
 }
 
-int Menu::activate()
+int Menu::activate() const
 {
 	curr->action();
 	return curr->code;
@@ -259,17 +260,17 @@ int Menu::activate()
 
 void Menu::up()
 {
-	if (curr->prev != NULL) curr = curr->prev;
+	if (curr->prev != nullptr) curr = curr->prev;
 }
 
 void Menu::down()
 {
-	if (curr->next != NULL) curr = curr->next;
+	if (curr->next != nullptr) curr = curr->next;
 }
 
 void Menu::draw()
 {
-	if (first == NULL) return;
+	if (first == nullptr) return;
 
 	// back
 
@@ -301,14 +302,14 @@ void Menu::draw()
 
 	//
 
-	float dy = -3.2f * MenuChar::charDim;
-	float y = (1 - count) * dy / 2.0f * 0.667f;
+	const float dy = -3.2f * MenuChar::charDim;
+	const float y = (1 - count) * dy / 2.0f * 0.667f;
 
 	glPushMatrix();
 
 	glTranslatef(0, y, 0);
 
-	for (MenuItem *i = first; i != NULL; i = i->next)
+	for (MenuItem *i = first; i != nullptr; i = i->next)
 	{
 		if (i == curr)
 			glColor3f(0.9f, 0.6f, 0.0f);
@@ -346,7 +347,7 @@ void Menu::drawHelp()
 	glColor4f(0.7f, 0.7f, 0.7f, 0.4f);
 
 	float y = 0.3f;
-	float dy = -0.05f;
+	const float dy = -0.05f;
 
 	MenuChar::drawString2Dc("                               ", y, 0.05f); y += dy;
 	MenuChar::drawString2Dc("       keyboard commands       ", y, 0.05f); y += dy;

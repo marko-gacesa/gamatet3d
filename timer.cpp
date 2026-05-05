@@ -3,6 +3,7 @@
  *
  * Autor: Marko Gacesa
  * Datum: 09.06.2007.
+ * Datum: 05.05.2026.
  */
 
 #include "timer.h"
@@ -27,15 +28,15 @@ void Timer::stop()
 float Timer::getTime() const
 {
 	if (running)
-		return ((float)(timer - time) / (float)ticksPerSecond);
+		return (static_cast<float>(timer - time) / static_cast<float>(ticksPerSecond));
 	else
-		return ((float)(time) / (float)ticksPerSecond);
+		return (static_cast<float>(time) / static_cast<float>(ticksPerSecond));
 }
 
-void Timer::addTime(float seconds)
+void Timer::addTime(const float seconds)
 {
 	if (running)
-		time -= (long)(ticksPerSecond * seconds);
+		time -= static_cast<long>(ticksPerSecond * seconds);
 	else
-		time += (long)(ticksPerSecond * seconds);
+		time += static_cast<long>(ticksPerSecond * seconds);
 }

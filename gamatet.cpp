@@ -3,11 +3,12 @@
  *
  * Autor: Marko Gacesa
  * Datum: 05.06.2007.
+ * Datum: 05.05.2026.
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <math.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
 #include <GL/glut.h>
 #include <GL/gl.h>
 
@@ -92,18 +93,18 @@ public:
 	static bool extSel() { return width == 5 && height == 5 && depth == 10 && blockSet == Tet3D::EXTENDED; }
 };
 
-Tet3D* Game::tet = NULL;
-Menu* Game::menu = NULL;
+Tet3D* Game::tet = nullptr;
+Menu* Game::menu = nullptr;
 
-Menu* Game::menuMain     = NULL;
-Menu* Game::menuLevel    = NULL;
-Menu* Game::menuQuit     = NULL;
-Menu* Game::menuSetup    = NULL;
-Menu* Game::menuCustom   = NULL;
-Menu* Game::menuWidth    = NULL;
-Menu* Game::menuHeight   = NULL;
-Menu* Game::menuDepth    = NULL;
-Menu* Game::menuBlockSet = NULL;
+Menu* Game::menuMain     = nullptr;
+Menu* Game::menuLevel    = nullptr;
+Menu* Game::menuQuit     = nullptr;
+Menu* Game::menuSetup    = nullptr;
+Menu* Game::menuCustom   = nullptr;
+Menu* Game::menuWidth    = nullptr;
+Menu* Game::menuHeight   = nullptr;
+Menu* Game::menuDepth    = nullptr;
+Menu* Game::menuBlockSet = nullptr;
 
 Game::Modes Game::mode = MODE_MENU;
 
@@ -194,7 +195,7 @@ void Game::init()
 	mode = MODE_MENU;
 }
 
-void Game::menuSelect(MenuCode code)
+void Game::menuSelect(const MenuCode code)
 {
 	switch (code)
 	{
@@ -217,12 +218,12 @@ void Game::menuSelect(MenuCode code)
 
 void Game::select()
 {
-	menuSelect((MenuCode)menu->activate());
+	menuSelect(static_cast<MenuCode>(menu->activate()));
 }
 
 void Game::abort()
 {
-	menuSelect((MenuCode)menu->cancel());
+	menuSelect(static_cast<MenuCode>(menu->cancel()));
 }
 
 void Game::help()
@@ -259,10 +260,10 @@ void Game::startGame()
 
 void Game::startMenu()
 {
-	if (tet != NULL)
+	if (tet != nullptr)
 	{
 		delete tet;
-		tet = NULL;
+		tet = nullptr;
 	}
 
 	cameraH = 0.0f;
@@ -282,7 +283,7 @@ void LoadGLTexture(const char* textureName, GLuint *texID)
 {
 	int width, height, channels;
 	unsigned char* data = stbi_load(textureName, &width, &height, &channels, 0);
-	if (data == NULL) return;
+	if (data == nullptr) return;
 
 	glGenTextures(1, texID);
 	glBindTexture(GL_TEXTURE_2D, *texID);
@@ -490,7 +491,7 @@ int diffMouseY = 0;
 bool mouseLButton = false;
 bool mouseRButton = false;
 
-void mouse_motion(int x, int y)
+void mouse_motion(const int x, const int y)
 {
 	diffMouseX = x - oldMouseX;
 	diffMouseY = y - oldMouseY;
@@ -521,7 +522,7 @@ void mouse_motion(int x, int y)
 	oldMouseY = y;
 }
 
-void mouse_action(int button, int state, int x, int y)
+void mouse_action(const int button, const int state, const int x, const int y)
 {
 	//int diffX = x - oldMouseX;
 	//int diffY = y - oldMouseY;

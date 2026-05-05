@@ -3,6 +3,7 @@
  *
  * Autor: Marko Gacesa
  * Datum: 05.06.2007.
+ * Datum: 05.05.2026.
  */
 
 #ifndef _TET3D_H_
@@ -20,7 +21,7 @@ public:
 	enum BlockSet { FLAT, BASIC, EXTENDED };
 
 private:
-	static const int LEVELCOUNT = 11;
+	static constexpr int LEVELCOUNT = 11;
 	static float levelPause[LEVELCOUNT];
 
 	WalledBrickField* field;
@@ -33,8 +34,8 @@ private:
 	float slideTime;
 	float blockAlpha;
 
-	static const int NEXTBLOCKS = 10;
-	static const float NEXTBLOCKY;
+	static constexpr int NEXTBLOCKS = 10;
+	static constexpr float NEXTBLOCKY = 0.20f;
 	BrickField* next[NEXTBLOCKS];
 	Timer timerNext;
 	AnimList nextAnimList;
@@ -64,7 +65,7 @@ private:
 	void nextBlock();
 
 	bool zFull(int z) const;
-	int meld();
+	int meld() const;
 	void drop1();
 	bool rotAdjust();
 
@@ -100,7 +101,7 @@ public:
 
 	// start/stop
 
-	void setLevel(int l) { if (!playing && l >= 0 && l <= 9) level = l; }
+	void setLevel(const int l) { if (!playing && l >= 0 && l <= 9) level = l; }
 
 	void gameStart();
 	void gameOver();
@@ -123,7 +124,7 @@ public:
 
 	// crtanje
 
-	void render();
+	void render() const;
 
 	void renderHUD() const;
 };

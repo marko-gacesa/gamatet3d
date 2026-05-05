@@ -3,9 +3,9 @@
  *
  * Autor: Marko Gacesa
  * Datum: 05.06.2007.
+ * Datum: 05.05.2026.
  */
 
-#include <GL/glut.h>
 #include <GL/gl.h>
 #include "brick.h"
 
@@ -14,7 +14,7 @@ GLuint Brick::listBlock = 0;
 
 void Brick::drawBrick()
 {
-	const float blockSize = 0.475f;
+	constexpr float blockSize = 0.475f;
 
 	glBegin(GL_QUADS);
 		// front

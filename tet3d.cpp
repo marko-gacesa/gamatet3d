@@ -3,11 +3,10 @@
  *
  * Autor: Marko Gacesa
  * Datum: 05.06.2007.
+ * Datum: 05.05.2026.
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <GL/glut.h>
+#include <cstdio>
 #include <GL/gl.h>
 #include "brick.h"
 #include "brickfield.h"
@@ -21,11 +20,9 @@
 //                                       0     1     2     3     4     5     6     7     8     9     X
 float Tet3D::levelPause[LEVELCOUNT] = { 4.0f, 3.4f, 2.8f, 2.3f, 1.8f, 1.4f, 1.0f, 0.7f, 0.4f, 0.2f, 0.1f };
 
-const float Tet3D::NEXTBLOCKY = 0.20f;
-
 // konstruktor
 
-Tet3D::Tet3D() : field(NULL), block(NULL), timer(), random(), timerNext(), nextAnimList()
+Tet3D::Tet3D() : field(nullptr), block(nullptr)
 {
 	drawShadows = true;
 
@@ -36,7 +33,7 @@ Tet3D::Tet3D() : field(NULL), block(NULL), timer(), random(), timerNext(), nextA
 	slideTime = 0.55f; // [sekundi]
 	blockAlpha = 0.5f; // 0..1
 
-	for (int i = 0; i < NEXTBLOCKS; i++) next[i] = NULL;
+	for (int i = 0; i < NEXTBLOCKS; i++) next[i] = nullptr;
 	nextA = nextB = 0.0f;
 	timerNext.start();
 
@@ -81,13 +78,13 @@ void Tet3D::paintBricks()
 			}
 }
 
-void Tet3D::generateField(int dimX, int dimY, int dimZ, BlockSet bset)
+void Tet3D::generateField(const int dimX, const int dimY, const int dimZ, const BlockSet bset)
 {
-	if (field != NULL) delete field;
-	if (block != NULL) delete block;
+	if (field != nullptr) delete field;
+	if (block != nullptr) delete block;
 
-	field = NULL;
-	block = NULL;
+	field = nullptr;
+	block = nullptr;
 
 	field = new WalledBrickField(dimX, dimY, dimZ);
 	playing = false;
@@ -97,7 +94,7 @@ void Tet3D::generateField(int dimX, int dimY, int dimZ, BlockSet bset)
 
 	for (int i = 0; i < NEXTBLOCKS; i++)
 	{
-		if (next[i] != NULL)
+		if (next[i] != nullptr)
 			delete next[i];
 
 		next[i] = createBlock();
@@ -117,17 +114,17 @@ void Tet3D::generateField(int dimX, int dimY, int dimZ, BlockSet bset)
 
 void Tet3D::deleteField()
 {
-	if (field != NULL) delete field;
-	if (block != NULL) delete block;
+	delete field;
+	delete block;
 
-	field = NULL;
-	block = NULL;
+	field = nullptr;
+	block = nullptr;
 
 	for (int i = 0; i < NEXTBLOCKS; i++)
-		if (next[i] != NULL)
+		if (next[i] != nullptr)
 		{
 			delete next[i];
-			next[i] = NULL;
+			next[i] = nullptr;
 		}
 
 	playing = false;
@@ -137,7 +134,7 @@ void Tet3D::deleteField()
 	timer.reset();
 }
 
-char Tet3D::getBlockSetCode(BlockSet bset)
+char Tet3D::getBlockSetCode(const BlockSet bset)
 {
 	switch (bset)
 	{
@@ -150,8 +147,8 @@ char Tet3D::getBlockSetCode(BlockSet bset)
 
 void Tet3D::nextBlock()
 {
-	if (block != NULL) delete block;
-	block = NULL;
+	delete block;
+	block = nullptr;
 
 	block = next[0];
 
@@ -164,7 +161,7 @@ void Tet3D::nextBlock()
 			for (int x = 0; x < block->dimX; x++)
 			{
 				Brick* q = block->get(x, y, z);
-				if (q != NULL) q->color.set(0.9f, 0.9f, 0.6f, blockAlpha);
+				if (q != nullptr) q->color.set(0.9f, 0.9f, 0.6f, blockAlpha);
 			}
 
 	//blockX = field->dimX / 2 - block->dimX / 2;
@@ -184,7 +181,7 @@ void Tet3D::nextBlock()
 		meld();
 
 		delete block;
-		block = NULL;
+		block = nullptr;
 
 		gameOver();
 	}
@@ -210,22 +207,22 @@ bool Tet3D::isBlockOk() const
 
 /* igra */
 
-bool Tet3D::zFull(int z) const
+bool Tet3D::zFull(const int z) const
 {
-	if (field == NULL) return false;
+	if (field == nullptr) return false;
 
 	for (int x = 0; x < field->dimX; x++)
 		for (int y = 0; y < field->dimY; y++)
-			if (field->get(x, y, z) == NULL)
+			if (field->get(x, y, z) == nullptr)
 				return false;
 	return true;
 }
 
-int Tet3D::meld()
+int Tet3D::meld() const
 {
 	int melded = 0;
 
-	if (block == NULL) return 0;
+	if (block == nullptr) return 0;
 
 	for (int z = 0; z < block->dimZ; z++)
 		for (int y = 0; y < block->dimY; y++)
@@ -239,7 +236,7 @@ int Tet3D::meld()
 							// regularno stanje
 							// premesti brick iz block-a u field
 							field->set(blockX+x, blockY+y, blockZ+z, block->get(x, y, z));
-							block->set(x, y, z, NULL);
+							block->set(x, y, z, nullptr);
 							melded++;
 						}
 						else
@@ -258,7 +255,7 @@ void Tet3D::drop1()
 	{
 		blockZ++;
 
-		int melded = meld();
+		const int melded = meld();
 		int cleared = 0;
 
 		for (int z = 0; z < field->dimZ;)
@@ -280,7 +277,7 @@ void Tet3D::drop1()
 							{
 								field->get(x, y, k)->anims.add(new AnimQuad(0.0f, 0.0f, -1.0f, animDuration));
 								field->set(x, y, k - 1, field->get(x, y, k));
-								field->set(x, y, k, NULL);
+								field->set(x, y, k, nullptr);
 							}
 			}
 			else
@@ -350,7 +347,7 @@ void Tet3D::pause()
 
 void Tet3D::drop()
 {
-	if (!playing || paused || block == NULL) return;
+	if (!playing || paused || block == nullptr) return;
 
 	int oldBlockZ = blockZ;
 
@@ -375,25 +372,25 @@ void Tet3D::drop()
 	}
 }
 
-void Tet3D::moveX(int dx)
+void Tet3D::moveX(const int dx)
 {
-	if (!playing || paused || block == NULL) return;
+	if (!playing || paused || block == nullptr) return;
 	blockX += dx;
 	if (!isBlockOk()) { blockX -= dx; return; }
 	block->anims.add(new AnimLin(dx, 0.0f, 0.0f, animDuration));
 }
 
-void Tet3D::moveY(int dy)
+void Tet3D::moveY(const int dy)
 {
-	if (!playing || paused || block == NULL) return;
+	if (!playing || paused || block == nullptr) return;
 	blockY += dy;
 	if (!isBlockOk()) { blockY -= dy; return; }
 	block->anims.add(new AnimLin(0.0f, dy, 0.0f, animDuration));
 }
 
-void Tet3D::moveZ(int dz)
+void Tet3D::moveZ(const int dz)
 {
-	if (!playing || paused || block == NULL) return;
+	if (!playing || paused || block == nullptr) return;
 	blockZ += dz;
 	if (!isBlockOk()) { blockZ -= dz; return; }
 	block->anims.add(new AnimLin(0.0f, 0.0f, dz, animDuration));
@@ -423,9 +420,9 @@ bool Tet3D::rotAdjust()
 	return false;
 }
 
-void Tet3D::rotateX(bool ccw)
+void Tet3D::rotateX(const bool ccw)
 {
-	if (!playing || paused || block == NULL) return;
+	if (!playing || paused || block == nullptr) return;
 	block->RotateX(ccw);
 
 	if (rotAdjust())
@@ -434,9 +431,9 @@ void Tet3D::rotateX(bool ccw)
 		block->RotateX(!ccw);
 }
 
-void Tet3D::rotateY(bool ccw)
+void Tet3D::rotateY(const bool ccw)
 {
-	if (!playing || paused || block == NULL) return;
+	if (!playing || paused || block == nullptr) return;
 	block->RotateY(ccw);
 
 	if (rotAdjust())
@@ -445,9 +442,9 @@ void Tet3D::rotateY(bool ccw)
 		block->RotateY(!ccw);
 }
 
-void Tet3D::rotateZ(bool ccw)
+void Tet3D::rotateZ(const bool ccw)
 {
-	if (!playing || paused || block == NULL) return;
+	if (!playing || paused || block == nullptr) return;
 	block->RotateZ(ccw);
 
 	if (rotAdjust())
@@ -458,7 +455,7 @@ void Tet3D::rotateZ(bool ccw)
 
 // height
 
-int Tet3D::getHeight(int x, int y) const
+int Tet3D::getHeight(const int x, const int y) const
 {
 	for (int z = field->dimZ - 1; z >= 0; z--)
 		if (!field->isEmpty(x, y, z))
@@ -493,11 +490,11 @@ void Tet3D::animate()
 
 // render
 
-void Tet3D::render()
+void Tet3D::render() const
 {
 	// crtaj polje
 
-	if (field != NULL)
+	if (field != nullptr)
 	{
 		field->drawField = !paused;
 		field->render();
@@ -505,11 +502,11 @@ void Tet3D::render()
 
 	// crtaj "senku" bloka
 
-	if (!paused && block != NULL && drawShadows) renderShadow();
+	if (!paused && block != nullptr && drawShadows) renderShadow();
 
 	// crtaj blok
 
-	if (!paused && block != NULL)
+	if (!paused && block != nullptr)
 	{
 		glPushMatrix();
 
@@ -563,7 +560,7 @@ void Tet3D::renderShadow() const
 	glEnable(GL_LIGHTING);
 }
 
-void frame(float x1, float y1, float x2, float y2, float d)
+void frame(const float x1, const float y1, const float x2, const float y2, const float d)
 {
 	glBegin(GL_QUADS);
 		glVertex2f(x1 - d, y2 + d);
@@ -610,11 +607,11 @@ void Tet3D::renderHUD() const
 
 	float y_hud = 1.0f - dy9;
 
-	snprintf(cbuffer, 7, " %c ", level <= 9 ? '0' + (char)level : 'x' );
+	snprintf(cbuffer, 7, " %c ", level <= 9 ? '0' + static_cast<char>(level) : 'x' );
 	MenuChar::drawString2D("level", x_hud, y_hud -= dy5, dy5);
 	MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy3, dy3);
 	y_hud -= dy4;
-	snprintf(cbuffer, 7, "%06d", uint(score_count) % 1000000);
+	snprintf(cbuffer, 7, "%06d", static_cast<uint>(score_count) % 1000000);
 	MenuChar::drawString2D(" score ", x_hud, y_hud -= dy7, dy7);
 	MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy6, dy6);
 	y_hud -= dy8;
@@ -691,7 +688,7 @@ void Tet3D::renderHUD() const
 	float y1 =  0.95f;
 
 	float dx = x1 - x0;
-	float dy = (y1 - y0) / (float)field->dimZ;
+	float dy = (y1 - y0) / static_cast<float>(field->dimZ);
 
 	float ty = y0;
 
@@ -728,7 +725,7 @@ void Tet3D::renderHUD() const
 
 	//---//
 
-	if (block != NULL)
+	if (block != nullptr)
 	{
 		bool m[5];
 

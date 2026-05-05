@@ -3,6 +3,7 @@
  *
  * Autor: Marko Gacesa
  * Datum: 09.06.2007.
+ * Datum: 05.05.2026.
  */
 
 #ifndef _TIMER_H_

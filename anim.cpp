@@ -3,9 +3,9 @@
  *
  * Autor: Marko Gacesa
  * Datum: 09.06.2007.
- */
+ * Datum: 05.05.2026.
+*/
 
-#include <GL/glut.h>
 #include <GL/gl.h>
 #include "anim.h"
 
@@ -26,12 +26,12 @@ void Anim::update()
 
 void AnimList::update()
 {
-	Anim* prev = NULL;
+	Anim* prev = nullptr;
 	Anim* curr = first;
 
 	clear();
 
-	while (curr != NULL)
+	while (curr != nullptr)
 	{
 		curr->update();
 
@@ -47,14 +47,14 @@ void AnimList::update()
 
 		if (curr->finished)
 		{
-			if (prev == NULL)
+			if (prev == nullptr)
 				first = curr->next;
 			else
 				prev->next = curr->next;
 
 			Anim* t = curr;
 			curr = curr->next;
-			t->next = NULL;
+			t->next = nullptr;
 			delete t;
 		}
 		else

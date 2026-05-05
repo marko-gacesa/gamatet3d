@@ -3,9 +3,10 @@
  *
  * Autor: Marko Gacesa
  * Datum: 05.06.2007.
+ * Datum: 05.05.2026.
  */
 
-#include <stdlib.h>
+#include <cstdlib>
 #include "brick.h"
 #include "brickfield.h"
 
@@ -13,62 +14,61 @@
 // BrickField //
 //------------//
 
-bool BrickField::isEmpty(int x, int y, int z) const
+bool BrickField::isEmpty(const int x, const int y, const int z) const
 {
-	int idx = index(x, y, z);
+	const int idx = index(x, y, z);
 	if (idx < 0 || idx >= size) return true;
-	return field[idx] == NULL;
+	return field[idx] == nullptr;
 }
 
 // get i set vrse samo primitivne operacije
 
-Brick* BrickField::get(int x, int y, int z) const
+Brick* BrickField::get(const int x, const int y, const int z) const
 {
-	int idx = index(x, y, z);
-	if (idx < 0 || idx >= size) return NULL;
+	const int idx = index(x, y, z);
+	if (idx < 0 || idx >= size) return nullptr;
 	return field[idx];
 }
 
-void BrickField::set(int x, int y, int z, Brick* brick)
+void BrickField::set(const int x, const int y, const int z, Brick* brick) const
 {
-	int idx = index(x, y, z);
+	const int idx = index(x, y, z);
 	if (idx < 0 || idx >= size) return;
 	field[idx] = brick;
 }
 
 // clear brise objekat i iz memorije i iz polja
 
-void BrickField::clear(int x, int y, int z)
+void BrickField::clear(const int x, const int y, const int z) const
 {
-	int idx = index(x, y, z);
+	const int idx = index(x, y, z);
 	if (idx < 0 || idx >= size) return;
 
 	delete field[idx];
 	field[idx] = NULL;
 }
 
-void BrickField::clear()
+void BrickField::clear() const
 {
 	for (int i = 0; i < size; i++)
 	{
 		delete field[i];
-		field[i] = NULL;
+		field[i] = nullptr;
 	}
 }
 
-void BrickField::RotateX(bool ccw)
-{
+void BrickField::RotateX(const bool ccw) const {
 	if (dimY != dimZ) return;
-	int d = dimY;
+	const int d = dimY;
 
 	for (int x = 0; x < dimX; x++)
 		for (int z = 0; z < d/2; z++)
 			for (int y = z; y < d-1-z; y++)
 			{
-				int i0 = index(x,     y,     z);
-				int i1 = index(x,     z, d-y-1);
-				int i2 = index(x, d-y-1, d-z-1);
-				int i3 = index(x, d-z-1,     y);
+				const int i0 = index(x,       y,       z);
+				const int i1 = index(x,     z, d-y-1);
+				const int i2 = index(x, d-y-1, d-z-1);
+				const int i3 = index(x, d-z-1,     y);
 				Brick* t = field[i0];
 				if (ccw)
 				{
@@ -86,19 +86,19 @@ void BrickField::RotateX(bool ccw)
 				}
 			}
 }
-void BrickField::RotateY(bool ccw)
+void BrickField::RotateY(const bool ccw) const
 {
 	if (dimX != dimZ) return;
-	int d = dimX;
+	const int d = dimX;
 
 	for (int y = 0; y < dimY; y++)
 		for (int x = 0; x < d/2; x++)
 			for (int z = x; z < d-1- x; z++)
 			{
-				int i0 = index(    x, y,     z);
-				int i1 = index(d-z-1, y,     x);
-				int i2 = index(d-x-1, y, d-z-1);
-				int i3 = index(    z, y, d-x-1);
+				const int i0 = index(      x, y,       z);
+				const int i1 = index(d-z-1, y,     x);
+				const int i2 = index(d-x-1, y, d-z-1);
+				const int i3 = index(    z, y, d-x-1);
 				Brick* t = field[i0];
 				if (ccw)
 				{
@@ -116,19 +116,19 @@ void BrickField::RotateY(bool ccw)
 				}
 			}
 }
-void BrickField::RotateZ(bool ccw)
+void BrickField::RotateZ(const bool ccw) const
 {
 	if (dimX != dimY) return;
-	int d = dimX;
+	const int d = dimX;
 
 	for (int z = 0; z < dimZ; z++)
 		for (int y = 0; y < d/2; y++)
 			for (int x = y; x < d-1-y; x++)
 			{
-				int i0 = index(    x,     y, z);
-				int i1 = index(    y, d-x-1, z);
-				int i2 = index(d-x-1, d-y-1, z);
-				int i3 = index(d-y-1,     x, z);
+				const int i0 = index(      x,       y, z);
+				const int i1 = index(    y, d-x-1, z);
+				const int i2 = index(d-x-1, d-y-1, z);
+				const int i3 = index(d-y-1,     x, z);
 				Brick* t = field[i0];
 				if (ccw)
 				{
@@ -154,7 +154,7 @@ void BrickField::draw() const
 			for (int x = 0; x < dimX; x++)
 			{
 				Brick* b = field[index(x, y, z)];
-				if (b == NULL) continue;
+				if (b == nullptr) continue;
 
 				glPushMatrix();
 
@@ -186,25 +186,25 @@ void WalledBrickField::compileListWall()
 	glPolygonMode(GL_BACK, GL_LINE);
 	glDisable(GL_CULL_FACE);
 
-	int segX = dimX;
-	int segY = dimY;
-	int segZ = dimZ;
+	const int segX = dimX;
+	const int segY = dimY;
+	const int segZ = dimZ;
 
-	float mx = dimX + 0.01;
-	float my = dimY + 0.01;
-	float mz = dimZ + 0.01;
+	const float mx = dimX + 0.01f;
+	const float my = dimY + 0.01f;
+	const float mz = dimZ + 0.01f;
 
-	float dx = mx / segX;
-	float dy = my / segY;
-	float dz = mz / segZ;
+	const float dx = mx / segX;
+	const float dy = my / segY;
+	const float dz = mz / segZ;
 
-	float x0 = -mx / 2.0f;
-	float y0 = -my / 2.0f;
-	float z0 = -mz / 2.0f;
+	const float x0 = -mx / 2.0f;
+	const float y0 = -my / 2.0f;
+	const float z0 = -mz / 2.0f;
 
-	float x1 = +mx / 2.0f;
-	float y1 = +my / 2.0f;
-	float z1 = +mz / 2.0f;
+	const float x1 = +mx / 2.0f;
+	const float y1 = +my / 2.0f;
+	const float z1 = +mz / 2.0f;
 
 	float x, y, z;
 
@@ -216,7 +216,7 @@ void WalledBrickField::compileListWall()
 	glBegin(GL_QUADS);
 	glNormal3f(0, 0, 1);
 
-	int add = 10;
+	const int add = 10;
 	x = x0 - add * dx;
 	for (int xi = -add; xi < segX + add; xi++, x += dx)
 	{
