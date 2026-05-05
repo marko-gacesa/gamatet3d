@@ -1,9 +1,11 @@
 
 /* color.h
  *
- * Autor: Marko Gacesa
+ * Autor: Marko Gaćeša
  * Datum: 10.06.2007.
  * Datum: 05.05.2026.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 #ifndef _COLOR_H_

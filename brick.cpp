@@ -1,9 +1,11 @@
 
 /* brick.h
  *
- * Autor: Marko Gacesa
+ * Autor: Marko Gaćeša
  * Datum: 05.06.2007.
  * Datum: 05.05.2026.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 #include <GL/gl.h>

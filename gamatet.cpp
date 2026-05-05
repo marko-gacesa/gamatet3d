@@ -1,9 +1,11 @@
 
 /* gamatet.cpp
  *
- * Autor: Marko Gacesa
+ * Autor: Marko Gaćeša
  * Datum: 05.06.2007.
  * Datum: 05.05.2026.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 #include <cstdlib>
@@ -251,8 +253,8 @@ void Game::startGame()
 	cameraV = 0.0f;
 
 	// proracuni za ugao gledanja 45 stepeni
-	float cDh = 0.5f * (tet->depth() + (tet->height() + 0.1f) * 2.4142f);
-	float cDw = 0.5f * (tet->depth() + (tet->width()  + 0.6f)  * 2.4142f);
+	const float cDh = 0.5f * (tet->depth() + (tet->height() + 0.1f) * 2.4142f);
+	const float cDw = 0.5f * (tet->depth() + (tet->width()  + 0.6f)  * 2.4142f);
 	cameraD = cDh > cDw ? cDh : cDw;
 
 	mode = MODE_GAME;
@@ -666,7 +668,7 @@ void key_down(unsigned char key, int x, int y)
 
 int main(int argc, char *argv[])
 {
-	printf("GaMaTeT 3D by Gacesa Marko, 2007.\n");
+	printf(u8"GaMaTeT 3D by Gaćeša Marko, 2007.\n");
 
 	viewW = 640;
 	viewH = 480;
