@@ -225,17 +225,12 @@ void WalledBrickField::compileListWall()
 		{
 			float z = z0;
 			if (xi < 0 || xi >= segX || yi < 0 || yi >= segY) z = z1;
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(x   , y   , z);
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(x+dx, y   , z);
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(x+dx, y+dy, z);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(x   , y+dy, z);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(x   , y   , z);
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(x+dx, y   , z);
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(x+dx, y+dy, z);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(x   , y+dy, z);
 		}
 	}
-	glEnd();
-
-	// zid
-
-	glBegin(GL_QUADS);
 
 	// levi zid
 
@@ -246,10 +241,10 @@ void WalledBrickField::compileListWall()
 		y = y0;
 		for (int yi = 0; yi < segY; yi++, y += dy)
 		{
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(x0, y   , z   );
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(x0, y+dy, z   );
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(x0, y+dy, z+dz);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(x0, y   , z+dz);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(x0, y   , z   );
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(x0, y+dy, z   );
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(x0, y+dy, z+dz);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(x0, y   , z+dz);
 		}
 	}
 
@@ -262,10 +257,10 @@ void WalledBrickField::compileListWall()
 		x = x1;
 		for (int xi = 0; xi < segX; xi++, x -= dx)
 		{
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(x   , y0, z   );
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(x-dx, y0, z   );
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(x-dx, y0, z+dz);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(x   , y0, z+dz);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(x   , y0, z   );
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(x-dx, y0, z   );
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(x-dx, y0, z+dz);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(x   , y0, z+dz);
 		}
 	}
 
@@ -278,10 +273,10 @@ void WalledBrickField::compileListWall()
 		y = y1;
 		for (int yi = 0; yi < segY; yi++, y -= dy)
 		{
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(x1, y   , z   );
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(x1, y-dy, z   );
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(x1, y-dy, z+dz);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(x1, y   , z+dz);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(x1, y   , z   );
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(x1, y-dy, z   );
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(x1, y-dy, z+dz);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(x1, y   , z+dz);
 		}
 	}
 
@@ -294,10 +289,10 @@ void WalledBrickField::compileListWall()
 		x = x0;
 		for (int xi = 0; xi < segX; xi++, x += dx)
 		{
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(x   , y1, z   );
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(x+dx, y1, z   );
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(x+dx, y1, z+dz);
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(x   , y1, z+dz);
+			glTexCoord2f(0.0f, 1.0f); glVertex3f(x   , y1, z   );
+			glTexCoord2f(1.0f, 1.0f); glVertex3f(x+dx, y1, z   );
+			glTexCoord2f(1.0f, 0.0f); glVertex3f(x+dx, y1, z+dz);
+			glTexCoord2f(0.0f, 0.0f); glVertex3f(x   , y1, z+dz);
 		}
 	}
 

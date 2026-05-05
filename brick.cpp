@@ -14,45 +14,45 @@ GLuint Brick::listBlock = 0;
 
 void Brick::drawBrick()
 {
-	const float blockSize = 0.499f;
+	const float blockSize = 0.475f;
 
 	glBegin(GL_QUADS);
 		// front
 		glNormal3f( 0.0f, 0.0f, 1.0f);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-blockSize, -blockSize,  blockSize);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f( blockSize, -blockSize,  blockSize);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f( blockSize,  blockSize,  blockSize);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-blockSize,  blockSize,  blockSize);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-blockSize, -blockSize,  blockSize);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( blockSize, -blockSize,  blockSize);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( blockSize,  blockSize,  blockSize);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-blockSize,  blockSize,  blockSize);
 		// back
 		glNormal3f( 0.0f, 0.0f,-1.0f);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(-blockSize, -blockSize, -blockSize);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(-blockSize,  blockSize, -blockSize);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f( blockSize,  blockSize, -blockSize);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f( blockSize, -blockSize, -blockSize);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-blockSize, -blockSize, -blockSize);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-blockSize,  blockSize, -blockSize);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( blockSize,  blockSize, -blockSize);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( blockSize, -blockSize, -blockSize);
 		// top
 		glNormal3f( 0.0f, 1.0f, 0.0f);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-blockSize,  blockSize, -blockSize);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-blockSize,  blockSize,  blockSize);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f( blockSize,  blockSize,  blockSize);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f( blockSize,  blockSize, -blockSize);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-blockSize,  blockSize, -blockSize);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-blockSize,  blockSize,  blockSize);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( blockSize,  blockSize,  blockSize);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( blockSize,  blockSize, -blockSize);
 		// bottom
 		glNormal3f( 0.0f,-1.0f, 0.0f);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(-blockSize, -blockSize, -blockSize);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f( blockSize, -blockSize, -blockSize);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f( blockSize, -blockSize,  blockSize);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(-blockSize, -blockSize,  blockSize);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-blockSize, -blockSize, -blockSize);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( blockSize, -blockSize, -blockSize);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( blockSize, -blockSize,  blockSize);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-blockSize, -blockSize,  blockSize);
 		// right
 		glNormal3f( 1.0f, 0.0f, 0.0f);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f( blockSize, -blockSize, -blockSize);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f( blockSize,  blockSize, -blockSize);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f( blockSize,  blockSize,  blockSize);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f( blockSize, -blockSize,  blockSize);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( blockSize, -blockSize, -blockSize);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( blockSize,  blockSize, -blockSize);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( blockSize,  blockSize,  blockSize);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( blockSize, -blockSize,  blockSize);
 		// left
 		glNormal3f(-1.0f, 0.0f, 0.0f);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-blockSize, -blockSize, -blockSize);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-blockSize, -blockSize,  blockSize);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(-blockSize,  blockSize,  blockSize);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(-blockSize,  blockSize, -blockSize);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-blockSize, -blockSize, -blockSize);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-blockSize, -blockSize,  blockSize);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-blockSize,  blockSize,  blockSize);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-blockSize,  blockSize, -blockSize);
 	glEnd();
 }
 

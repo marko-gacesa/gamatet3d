@@ -70,28 +70,28 @@ void MenuChar::draw(char ch)
 	glBegin(GL_QUADS);
 		// front
 		glNormal3f( 0.0f, 0.0f, 1.0f);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-charDim, -charDim,  charDim);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f( charDim, -charDim,  charDim);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f( charDim,  charDim,  charDim);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-charDim,  charDim,  charDim);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-charDim, -charDim,  charDim);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( charDim, -charDim,  charDim);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( charDim,  charDim,  charDim);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-charDim,  charDim,  charDim);
 		// back
 		glNormal3f( 0.0f, 0.0f, -1.0f);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-charDim, -charDim, -charDim);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-charDim,  charDim, -charDim);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f( charDim,  charDim, -charDim);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f( charDim, -charDim, -charDim);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-charDim, -charDim, -charDim);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-charDim,  charDim, -charDim);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( charDim,  charDim, -charDim);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( charDim, -charDim, -charDim);
 		// top
 		glNormal3f( 0.0f, 1.0f, 0.0f);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-charDim,  charDim, -charDim);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-charDim,  charDim,  charDim);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f( charDim,  charDim,  charDim);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f( charDim,  charDim, -charDim);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-charDim,  charDim, -charDim);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-charDim,  charDim,  charDim);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( charDim,  charDim,  charDim);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( charDim,  charDim, -charDim);
 		// bottom
 		glNormal3f( 0.0f,-1.0f, 0.0f);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-charDim, -charDim, -charDim);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f( charDim, -charDim, -charDim);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f( charDim, -charDim,  charDim);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-charDim, -charDim,  charDim);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-charDim, -charDim, -charDim);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( charDim, -charDim, -charDim);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( charDim, -charDim,  charDim);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-charDim, -charDim,  charDim);
 	glEnd();
 
 	glBindTexture(GL_TEXTURE_2D, textures[0]);
@@ -99,16 +99,16 @@ void MenuChar::draw(char ch)
 	glBegin(GL_QUADS);
 		// right
 		glNormal3f( 1.0f, 0.0f, 0.0f);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f( charDim, -charDim, -charDim);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f( charDim,  charDim, -charDim);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f( charDim,  charDim,  charDim);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f( charDim, -charDim,  charDim);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( charDim, -charDim, -charDim);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( charDim,  charDim, -charDim);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( charDim,  charDim,  charDim);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( charDim, -charDim,  charDim);
 		// left
 		glNormal3f(-1.0f, 0.0f, 0.0f);
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-charDim, -charDim, -charDim);
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(-charDim, -charDim,  charDim);
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(-charDim,  charDim,  charDim);
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-charDim,  charDim, -charDim);
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-charDim, -charDim, -charDim);
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-charDim, -charDim,  charDim);
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-charDim,  charDim,  charDim);
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-charDim,  charDim, -charDim);
 	glEnd();
 }
 
@@ -126,10 +126,10 @@ void MenuChar::draw2D(char ch, float x, float y, float d)
 	glBindTexture(GL_TEXTURE_2D, textures[tex]);
 
 	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f); glVertex2f(x    , y + d);
-		glTexCoord2f(0.0f, 0.0f); glVertex2f(x    , y    );
-		glTexCoord2f(1.0f, 0.0f); glVertex2f(x + d, y    );
-		glTexCoord2f(1.0f, 1.0f); glVertex2f(x + d, y + d);
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(x    , y + d);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f(x    , y    );
+		glTexCoord2f(1.0f, 1.0f); glVertex2f(x + d, y    );
+		glTexCoord2f(1.0f, 0.0f); glVertex2f(x + d, y + d);
 	glEnd();
 }
 
@@ -286,10 +286,10 @@ void Menu::draw()
 	glColor3f(1.0f, 1.0f, 1.0f);
 
 	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0);
-		glTexCoord2f(1.0f, 0.0f); glVertex2f( 1.0f, -1.0);
-		glTexCoord2f(1.0f, 1.0f); glVertex2f( 1.0f,  1.0);
-		glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f,  1.0);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, -1.0);
+		glTexCoord2f(1.0f, 1.0f); glVertex2f( 1.0f, -1.0);
+		glTexCoord2f(1.0f, 0.0f); glVertex2f( 1.0f,  1.0);
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f,  1.0);
 	glEnd();
 
 	glPopMatrix();
@@ -337,10 +337,10 @@ void Menu::drawHelp()
 	glColor3f(1.0f, 1.0f, 1.0f);
 
 	glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0);
-		glTexCoord2f(1.0f, 0.0f); glVertex2f( 1.0f, -1.0);
-		glTexCoord2f(1.0f, 1.0f); glVertex2f( 1.0f,  1.0);
-		glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f,  1.0);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, -1.0);
+		glTexCoord2f(1.0f, 1.0f); glVertex2f( 1.0f, -1.0);
+		glTexCoord2f(1.0f, 0.0f); glVertex2f( 1.0f,  1.0);
+		glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f,  1.0);
 	glEnd();
 
 	glColor4f(0.7f, 0.7f, 0.7f, 0.4f);
