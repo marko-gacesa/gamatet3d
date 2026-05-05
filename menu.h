@@ -20,9 +20,8 @@
 
 class MenuChar
 {
-private:
-	MenuChar();
 public:
+	MenuChar() = delete;
 	static const float charDim;
 	static GLuint textures[37];
 	static void loadTextures();
@@ -78,7 +77,8 @@ private:
 	Tet3D::BlockSet *data;
 	Tet3D::BlockSet value;
 public:
-	MenuItemSetBlock(int code, const char *str, Tet3D::BlockSet *pdata, Tet3D::BlockSet val) : MenuItem(code, str), data(pdata), value(val) {}
+	MenuItemSetBlock(const int code, const char *str, Tet3D::BlockSet *pdata, const Tet3D::BlockSet val)
+		: MenuItem(code, str), data(pdata), value(val) {}
 	bool forceSelect() override { return *data == value; }
 	void action() override { *data = value; }
 };
@@ -165,7 +165,7 @@ public:
 	void up();
 	void down();
 
-	void draw();
+	void draw() const;
 
 	static void drawHelp();
 };

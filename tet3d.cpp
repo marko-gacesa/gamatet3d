@@ -8,6 +8,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#include <utility>
 #include <cstdio>
 #include <GL/gl.h>
 #include "brick.h"
@@ -33,13 +34,14 @@ Tet3D::Tet3D() : field(nullptr), block(nullptr)
 
 	animDuration = 0.25f; // [sekundi]
 	slideTime = 0.55f; // [sekundi]
-	blockAlpha = 0.5f; // 0..1
+	blockAlpha = 0.85f; // 0..1
 
 	for (int i = 0; i < NEXTBLOCKS; i++) next[i] = nullptr;
 	nextA = nextB = 0.0f;
 	timerNext.start();
 
 	colorHUD.set(0.55f, 0.5f, 0.4f, 0.7f);
+	colorNext.set(0.7f, 0.8f, 0.9f, 1.0f);
 
 	score_count = 0;
 	block_count = 0;
@@ -61,29 +63,29 @@ Tet3D::~Tet3D()
 
 // metode
 
-const int brickColorsNum = 7;
+constexpr int brickColorsNum = 7;
 float brickColorsR[brickColorsNum] = { 0.1f, 0.1f, 0.1f, 0.5f, 0.5f, 0.5f, 0.5f };
 float brickColorsG[brickColorsNum] = { 0.1f, 0.5f, 0.5f, 0.1f, 0.1f, 0.5f, 0.5f };
 float brickColorsB[brickColorsNum] = { 0.5f, 0.1f, 0.5f, 0.1f, 0.5f, 0.1f, 0.5f };
 
-void Tet3D::paintBricks()
+void Tet3D::paintBricks() const
 {
 	for (int z = 0; z < field->dimZ; z++)
 		for (int x = 0; x < field->dimX; x++)
 			for (int y = 0; y < field->dimY; y++)
 			{
 				Brick* b = field->get(x, y ,z);
-				if (b == NULL) continue;
+				if (b == nullptr) continue;
 
-				int color = z % brickColorsNum;
+				const int color = z % brickColorsNum;
 				b->color.set(brickColorsR[color], brickColorsG[color], brickColorsB[color], 1.0f);
 			}
 }
 
 void Tet3D::generateField(const int dimX, const int dimY, const int dimZ, const BlockSet bset)
 {
-	if (field != nullptr) delete field;
-	if (block != nullptr) delete block;
+	delete field;
+	delete block;
 
 	field = nullptr;
 	block = nullptr;
@@ -96,9 +98,7 @@ void Tet3D::generateField(const int dimX, const int dimY, const int dimZ, const 
 
 	for (int i = 0; i < NEXTBLOCKS; i++)
 	{
-		if (next[i] != nullptr)
-			delete next[i];
-
+		delete next[i];
 		next[i] = createBlock();
 	}
 
@@ -166,17 +166,19 @@ void Tet3D::nextBlock()
 				if (q != nullptr) q->color.set(0.9f, 0.9f, 0.6f, blockAlpha);
 			}
 
-	//blockX = field->dimX / 2 - block->dimX / 2;
-	//blockY = field->dimY / 2 - block->dimY / 2;
-
-	blockX = 0;
-	blockY = 0;
-	blockZ = field->dimZ - block->dimZ;
-
+	// postavi u donji levi ugao
 	blockX = -2;
-	while (!isBlockOk() && blockX < 0) blockX++;
 	blockY = -2;
+	blockZ = field->dimZ - block->dimZ;
+	while (!isBlockOk() && blockX < 0) blockX++;
 	while (!isBlockOk() && blockY < 0) blockY++;
+
+	/*
+	// postavi na sredinu
+	blockX = field->dimX / 2 - block->dimX / 2;
+	blockY = field->dimY / 2 - block->dimY / 2;
+	blockZ = field->dimZ - block->dimZ;
+	*/
 
 	if (!isBlockOk())
 	{
@@ -193,7 +195,7 @@ void Tet3D::nextBlock()
 
 bool Tet3D::isBlockOk() const
 {
-	if (block == NULL) return true;
+	if (block == nullptr) return true;
 
 	for (int z = 0; z < block->dimZ; z++)
 		for (int y = 0; y < block->dimY; y++)
@@ -266,15 +268,13 @@ void Tet3D::drop1()
 			{
 				cleared++;
 
-				int x, y, k;
-
-				for (x = 0; x < field->dimX; x++)
-					for (y = 0; y < field->dimY; y++)
+				for (auto x = 0; x < field->dimX; x++)
+					for (auto y = 0; y < field->dimY; y++)
 						field->clear(x, y, z);
 
-				for (k = z + 1; k < field->dimZ; k++)
-					for (x = 0; x < field->dimX; x++)
-						for (y = 0; y < field->dimY; y++)
+				for (auto k = z + 1; k < field->dimZ; k++)
+					for (auto x = 0; x < field->dimX; x++)
+						for (auto y = 0; y < field->dimY; y++)
 							if (!field->isEmpty(x, y, k))
 							{
 								field->get(x, y, k)->anims.add(new AnimQuad(0.0f, 0.0f, -1.0f, animDuration));
@@ -403,22 +403,22 @@ bool Tet3D::rotAdjust()
 	const int d[3] = {0, -1, 1};
 	for (int x = 0; x < 3; x++)
 		for (int y = 0; y < 3; y++)
-				if (d[x] == 0 || d[y] == 0)
+			if (d[x] == 0 || d[y] == 0)
+			{
+				int oldX = blockX;
+				int oldY = blockY;
+				blockX += d[x];
+				blockY += d[y];
+
+				if (isBlockOk())
 				{
-					int oldX = blockX;
-					int oldY = blockY;
-					blockX += d[x];
-					blockY += d[y];
-
-					if (isBlockOk())
-					{
-						if (d[x] != 0 || d[y] != 0) block->anims.add(new AnimLin(d[x], d[y], 0, animDuration));
-						return true;
-					}
-
-					blockX = oldX;
-					blockY = oldY;
+					if (d[x] != 0 || d[y] != 0) block->anims.add(new AnimLin(d[x], d[y], 0, animDuration));
+					return true;
 				}
+
+				blockX = oldX;
+				blockY = oldY;
+			}
 	return false;
 }
 
@@ -539,9 +539,9 @@ void Tet3D::renderShadow() const
 			for (x = 0; x < block->dimX; x++)
 				m[x][y] = !block->isEmpty(x, y, z) || m[x][y];
 
-	float x0 = -field->dimX / 2.0f;
-	float y0 = -field->dimY / 2.0f;
-	float z0 = -field->dimZ / 2.0f;
+	const float x0 = -field->dimX / 2.0f;
+	const float y0 = -field->dimY / 2.0f;
+	const float z0 = -field->dimZ / 2.0f;
 
 	glDisable(GL_LIGHTING);
 
@@ -550,7 +550,7 @@ void Tet3D::renderShadow() const
 		for (y = 0; y < block->dimY; y++)
 			if (m[x][y])
 			{
-				int height = getHeight(blockX + x, blockY + y);
+				const int height = getHeight(blockX + x, blockY + y);
 				glBegin(GL_QUADS);
 					glVertex3f(x0 + blockX + x - 0.0f, y0 + blockY + y - 0.0f, z0 + height);
 					glVertex3f(x0 + blockX + x + 1.0f, y0 + blockY + y - 0.0f, z0 + height);
@@ -587,25 +587,54 @@ void frame(const float x1, const float y1, const float x2, const float y2, const
 	glEnd();
 }
 
-void Tet3D::renderHUD() const
+void Tet3D::renderHUDNext(const float posX, const float posY) const
 {
+	glPushMatrix();
+	glTranslatef(posX, posY, 0.0f);
+	for (int i = 0; i < NEXTBLOCKS && i < 5; i++)
+		if (next[i] != nullptr)
+		{
+			glPushMatrix();
+			glRotatef(nextB, 0, 1, 0);
+			glRotatef(nextA, 1, 0, 1);
+			glScalef(0.05f, 0.05f, 0.05f);
+			next[i]->draw();
+			glPopMatrix();
+			glTranslatef(0.0f, -NEXTBLOCKY, 0.0f);
+		}
+	glPopMatrix();
+}
+
+xy Tet3D::renderHUD() const
+{
+	colorHUD.activate();
+
 	//---//
 
-	colorHUD.activate();
+	if (!playing)
+	{
+		MenuChar::drawString2Dc("game",  0.00f, 0.15f);
+		MenuChar::drawString2Dc("over", -0.15f, 0.15f);
+	}
+
+	if (paused)
+		MenuChar::drawString2Dc("paused", -0.075f, 0.15f);
+
+	//---//
 
 	char cbuffer[7];
 
-	static const float dy1 = 0.24f;
-	//static const float dy2 = dy1 / 2;
-	static const float dy3 = dy1 / 3;
-	static const float dy4 = dy1 / 4;
-	static const float dy5 = dy1 / 5;
-	static const float dy6 = dy1 / 6;
-	static const float dy7 = dy1 / 7;
-	static const float dy8 = dy1 / 8;
-	static const float dy9 = dy1 / 9;
+	static constexpr float dy1 = 0.24f;
+	static constexpr float dy2 = dy1 / 2;
+	static constexpr float dy3 = dy1 / 3;
+	static constexpr float dy4 = dy1 / 4;
+	static constexpr float dy5 = dy1 / 5;
+	static constexpr float dy6 = dy1 / 6;
+	static constexpr float dy7 = dy1 / 7;
+	static constexpr float dy8 = dy1 / 8;
+	static constexpr float dy9 = dy1 / 9;
 
-	static const float x_hud = 1.0f - dy9 * 10;
+	static constexpr float x_hud = 1.0f - dy9 * 10;
 
 	float y_hud = 1.0f - dy9;
 
@@ -650,58 +679,34 @@ void Tet3D::renderHUD() const
 
 	MenuChar::drawString2D("next", x_hud, y_hud -= dy4, dy4);
 
-	glPushMatrix();
-	glTranslatef(x_hud + dy1 / 2.0f, y_hud - 0.1f + nextAnimList.dy, 0.0f);
-	for (int i = 0; i < NEXTBLOCKS && i < 5; i++)
-		if (next[i] != NULL)
-		{
-			glPushMatrix();
-			glRotatef(nextB, 0, 1, 0);
-			glRotatef(nextA, 1, 0, 1);
-			glScalef(0.05f, 0.05f, 0.05f);
-			next[i]->draw();
-			glPopMatrix();
-			glTranslatef(0.0f, -NEXTBLOCKY, 0.0f);
-		}
-	glPopMatrix();
+	const auto blocksX = x_hud + dy2;
+	const auto blocksY = y_hud - 0.1f + nextAnimList.dy;
 
-	//---//
+	return xy{ blocksX, blocksY };
+}
 
-	colorHUD.activate();
+void Tet3D::renderHUDHeight() const
+{
+	const int height = getHeight();
 
-	if (!playing)
-	{
-		MenuChar::drawString2Dc("game",  0.00f, 0.15f);
-		MenuChar::drawString2Dc("over", -0.15f, 0.15f);
-	}
+	constexpr float x0 = -0.95f;
+	constexpr float y0 = -0.95f;
+	constexpr float x1 = -0.80f;
+	constexpr float y1 =  0.95f;
 
-	if (paused)
-		MenuChar::drawString2Dc("paused", -0.075f, 0.15f);
-
-	//---//
-
-	int x, y, z;
-
-	int height = getHeight();
-
-	float x0 = -0.95f;
-	float y0 = -0.95f;
-	float x1 = -0.80f;
-	float y1 =  0.95f;
-
-	float dx = x1 - x0;
-	float dy = (y1 - y0) / static_cast<float>(field->dimZ);
+	const float dx = x1 - x0;
+	const float dy = (y1 - y0) / static_cast<float>(field->dimZ);
 
 	float ty = y0;
 
 	glBindTexture(GL_TEXTURE_2D, Brick::texture);
 
 	glBegin(GL_QUADS);
-	for (z = 0; z < field->dimZ; z++)
+	for (auto z = 0; z < field->dimZ; z++)
 	{
 		if (z < height)
 		{
-			int color = z % brickColorsNum;
+			const int color = z % brickColorsNum;
 			glColor4f(brickColorsR[color], brickColorsG[color], brickColorsB[color], colorHUD.getAlpha());
 		}
 		else
@@ -722,7 +727,7 @@ void Tet3D::renderHUD() const
 	frame(x0, y0, x1, y1, 0.02f);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 0.2f);
-	for (z = 0; z < field->dimZ; z++, ty += dy)
+	for (auto z = 0; z < field->dimZ; z++, ty += dy)
 		frame(x0 + 0.01f, ty + 0.01f, x1 - 0.01f, ty + dy - 0.01f, 0.005f);
 
 	//---//
@@ -731,11 +736,11 @@ void Tet3D::renderHUD() const
 	{
 		bool m[5];
 
-		for (z = 0; z < 5; z++) m[z] = false;
+		for (auto z = 0; z < 5; z++) m[z] = false;
 
-		for (z = 0; z < block->dimZ; z++)
-			for (y = 0; y < block->dimY; y++)
-				for (x = 0; x < block->dimX; x++)
+		for (auto z = 0; z < block->dimZ; z++)
+			for (auto y = 0; y < block->dimY; y++)
+				for (auto x = 0; x < block->dimX; x++)
 					m[z] = !block->isEmpty(x, y, z) || m[z];
 
 		float by1 = y0 + (blockZ + block->dimZ) * dy;
@@ -1144,7 +1149,7 @@ BrickField* Tet3D::createBlock()
 			for (int x = 0; x < b->dimX; x++)
 			{
 				Brick* q = b->get(x, y, z);
-				if (q != NULL) q->color.set(colorHUD);
+				if (q != nullptr) q->color.set(colorNext);
 			}
 
 	return b;

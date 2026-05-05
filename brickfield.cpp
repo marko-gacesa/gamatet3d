@@ -47,7 +47,7 @@ void BrickField::clear(const int x, const int y, const int z) const
 	if (idx < 0 || idx >= size) return;
 
 	delete field[idx];
-	field[idx] = NULL;
+	field[idx] = nullptr;
 }
 
 void BrickField::clear() const
@@ -185,9 +185,6 @@ void WalledBrickField::compileListWall()
 
 	glNewList(listWall, GL_COMPILE);
 
-	glPolygonMode(GL_BACK, GL_LINE);
-	glDisable(GL_CULL_FACE);
-
 	const int segX = dimX;
 	const int segY = dimY;
 	const int segZ = dimZ;
@@ -218,7 +215,7 @@ void WalledBrickField::compileListWall()
 	glBegin(GL_QUADS);
 	glNormal3f(0, 0, 1);
 
-	const int add = 10;
+	constexpr int add = 10;
 	x = x0 - add * dx;
 	for (int xi = -add; xi < segX + add; xi++, x += dx)
 	{
@@ -301,9 +298,6 @@ void WalledBrickField::compileListWall()
 	glEnd();
 
 	// zovi stari
-
-	glPolygonMode(GL_BACK, GL_FILL);
-	glEnable(GL_CULL_FACE);
 
 	glEndList();
 

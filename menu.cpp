@@ -16,7 +16,7 @@
 #include <GL/glut.h>
 #include "menu.h"
 
-#include "stb_image.h"
+#include "stb/stb_image.h"
 
 float deg2rad = 0.01745329252f;
 float rad2deg = 57.2957795131f;
@@ -30,8 +30,8 @@ GLuint MenuChar::textures[37];
 
 void MenuChar::loadTextures()
 {
-	auto fname = "texture/char/_.png";
-	auto name = strdup(fname);
+	const auto fname = "texture/char/_.png";
+	const auto name = strdup(fname);
 
 	glGenTextures(37, textures);
 
@@ -57,7 +57,7 @@ void MenuChar::loadTextures()
 	free(name);
 }
 
-void MenuChar::draw(char ch)
+void MenuChar::draw(const char ch)
 {
 	int tex = 0;
 
@@ -144,7 +144,7 @@ void MenuChar::drawString2D(const char* s, const float x, const float y, const f
 
 void MenuChar::drawString2Dc(const char* s, const float y, const float d)
 {
-	int l = static_cast<int>(strlen(s));
+	const int l = static_cast<int>(strlen(s));
 	float x = -l / 2.0f * d;
 	for (; *s != '\0'; s++, x += d)
 		draw2D(*s, x, y, d);
@@ -176,6 +176,8 @@ void MenuItem::draw()
 
 	glRotatef(ang, 1, 0, 0);
 
+	glDisable(GL_BLEND);
+
 	for (int i = 0; i < length; i++, x += dx)
 	{
 		glPushMatrix();
@@ -184,6 +186,8 @@ void MenuItem::draw()
 		glPopMatrix();
 		glTranslatef(dx, 0, 0);
 	}
+
+	glEnable(GL_BLEND);
 
 	glPopMatrix();
 }
@@ -270,7 +274,7 @@ void Menu::down()
 	if (curr->next != nullptr) curr = curr->next;
 }
 
-void Menu::draw()
+void Menu::draw() const
 {
 	if (first == nullptr) return;
 
@@ -349,7 +353,7 @@ void Menu::drawHelp()
 	glColor4f(0.7f, 0.7f, 0.7f, 0.4f);
 
 	float y = 0.3f;
-	const float dy = -0.05f;
+	constexpr float dy = -0.05f;
 
 	MenuChar::drawString2Dc("                               ", y, 0.05f); y += dy;
 	MenuChar::drawString2Dc("       keyboard commands       ", y, 0.05f); y += dy;

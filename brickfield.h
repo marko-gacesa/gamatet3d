@@ -31,8 +31,8 @@ private:
 	int index(const int x, const int y, const int z) const { return dimX * dimY * z + dimX * y + x; }
 
 public:
-	BrickField(const int dimensionX, const int dimensionY, const int dimensionZ) :
-			dimX(dimensionX), dimY(dimensionY), dimZ(dimensionZ), size(dimX * dimY * dimZ), field(new Brick*[size])
+	BrickField(const int dimensionX, const int dimensionY, const int dimensionZ)
+		: dimX(dimensionX), dimY(dimensionY), dimZ(dimensionZ), size(dimX * dimY * dimZ), field(new Brick*[size])
 	{
 		for (int i = 0; i < size; i++) field[i] = nullptr;
 	}

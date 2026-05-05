@@ -23,7 +23,7 @@ add_executable(gamatet3d
         menu.cpp
         menu.h
         random.h
-        stb_image.h
+        stb/stb_image.h
         tet3d.cpp
         tet3d.h
         timer.cpp

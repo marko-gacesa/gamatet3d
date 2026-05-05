@@ -17,8 +17,8 @@ class Color
 {
 	GLfloat v[4];
 public:
-	Color() { for (int i = 0; i < 4; i++) v[i] = 1.0f; }
-	Color(GLfloat r, GLfloat g, GLfloat b, GLfloat a) { v[0] = r; v[1] = g; v[2] = b; v[3] = a; }
+	Color() : v{1.0f, 1.0f, 1.0f, 1.0f} {}
+	Color(const GLfloat r, const GLfloat g, const GLfloat b, const GLfloat a) : v{r, g, b, a} {}
 	Color(const Color& c) { set(c); }
 
 	void set(const Color& c) { for (int i = 0; i < 4; i++) v[i] = c.v[i]; }
@@ -26,7 +26,7 @@ public:
 	{
 		v[0] = r; v[1] = g; v[2] = b; v[3] = a;
 	}
-	Color get() const { return Color(*this); }
+	Color get() const { return *this; }
 
 	void setRed(const GLfloat r) { v[0] = r; }
 	GLfloat getRed() const { return v[0]; }

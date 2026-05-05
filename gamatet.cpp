@@ -19,9 +19,9 @@
 #include "menu.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "stb/stb_image.h"
 
-const int TIMER_PERIOD = 20; // milisekundi
+constexpr int TIMER_PERIOD = 20; // milisekundi
 
 GLfloat LightAmbient[]  =	{ 0.5f, 0.5f, 0.5f, 1.0f };
 GLfloat LightDiffuse[]  =	{ 1.0f, 1.0f, 1.0f, 1.0f };
@@ -45,9 +45,8 @@ bool viewFullScreen = true;
 
 class Game
 {
-private:
-	Game();
 public:
+	Game() = delete;
 
 	enum Modes { MODE_GAME, MODE_MENU, MODE_HELP };
 
@@ -297,6 +296,9 @@ void LoadGLTexture(const char* textureName, GLuint *texID)
 	case 3:
 		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB8, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
 		break;
+	case 4:
+		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA8, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		break;
 	}
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -337,7 +339,8 @@ void init_all()
 	// faces
 
 	glFrontFace(GL_CCW);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT, GL_FILL);
 	glEnable(GL_CULL_FACE);
 
 	// textures
@@ -348,6 +351,7 @@ void init_all()
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
+	glDepthMask(GL_TRUE);
 
 	// alpha blending
 
@@ -367,8 +371,7 @@ void init_all()
 	// materijal
 
 	glEnable(GL_COLOR_MATERIAL);
-
-	//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
 	// liste
 
@@ -379,7 +382,7 @@ void init_all()
 // funkcija reshape() //
 //--------------------//
 
-void reshape(int width, int height)
+void reshape(const int width, const int height)
 {
 	viewW = width;
 	viewH = height;
@@ -388,7 +391,7 @@ void reshape(int width, int height)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(45, (GLfloat)width/(GLfloat)height, 1.0f, 100.0f);
+	gluPerspective(45, static_cast<GLfloat>(width)/static_cast<GLfloat>(height), 1.0f, 100.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 }
@@ -433,23 +436,33 @@ void draw()
 
 		// HUD
 
-		glDisable(GL_DEPTH_TEST);
-		glDisable(GL_LIGHTING);
-
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		glLoadIdentity();
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		Game::tet->renderHUD();
+		glDisable(GL_LIGHTING);
+		glDisable(GL_DEPTH_TEST);
+		glDepthMask(GL_FALSE);
+
+		Game::tet->renderHUDHeight();
+
+		glDisable(GL_BLEND);
+		const auto p = Game::tet->renderHUD();
+
+		glDepthMask(GL_TRUE);
+		glEnable(GL_DEPTH_TEST);
+
+		Game::tet->renderHUDNext(p.x, p.y);
+
+		glEnable(GL_BLEND);
+		glEnable(GL_LIGHTING);
 
 		glMatrixMode(GL_PROJECTION);
 		glPopMatrix();
 		glMatrixMode(GL_MODELVIEW);
 
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_LIGHTING);
 	}
 	if (Game::mode == Game::MODE_MENU)
 	{
@@ -572,7 +585,7 @@ void mouse_action(const int button, const int state, const int x, const int y)
 	}
 }
 
-void special_key_down(int key, int x, int y)
+void special_key_down(const int key, const int x, const int y)
 {
 	switch(key)
 	{
@@ -604,7 +617,7 @@ void special_key_down(int key, int x, int y)
 	}
 }
 
-void key_down(unsigned char key, int x, int y)
+void key_down(unsigned char key, const int x, const int y)
 {
 	if (key >= 'A' && key <= 'Z') key += ('a' - 'A');
 

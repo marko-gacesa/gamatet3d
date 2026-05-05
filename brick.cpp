@@ -72,15 +72,10 @@ void Brick::draw() const
 {
 	glBindTexture(GL_TEXTURE_2D, texture);
 
-	if (color.getAlpha() < 0.99f)
-		glDisable(GL_CULL_FACE);
-
 	color.activate();
 
 	if (listBlock == 0)
-		drawBrick();
+		compileList();
 	else
 		glCallList(listBlock);
-
-	glEnable(GL_CULL_FACE);
 }

@@ -11,21 +11,8 @@
 #ifndef _ANIM_H_
 #define _ANIM_H_
 
-
 #include "timer.h"
 #include "random.h"
-
-/*
-inline float deg2rad(float a) { return a * 0.01745329252f; }
-inline float rad2deg(float a) { return a * 57.2957795131f; }
-
-#define PI 3.1415926535897932384626433832795f
-#define PIPI 6.283185307179586476925286766559f
-#define PI2 1.5707963267948966192313216916398f
-#define PI4 0.78539816339744830961566084581988f
-#define SQRT2 1.4142135623730950488016887242097f
-#define SQRT1_2 0.70710678118654752440084436210485f
-*/
 
 //------//
 // Anim //
@@ -158,10 +145,9 @@ public:
 
 class AnimObj
 {
-private:
-	AnimObj(const AnimObj&); // prevent copy-construction
 public:
 	AnimObj() : anims() {}
+	AnimObj(const AnimObj&) = delete; // prevent copy-construction
 	virtual ~AnimObj() = default;
 
 	AnimList anims;
