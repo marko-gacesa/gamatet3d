@@ -32,9 +32,6 @@ Tet3D::Tet3D() : field(nullptr), block(nullptr)
 	playing = false;
 	paused = false;
 
-	animDuration = 0.25f; // [sekundi]
-	slideTime = 0.55f; // [sekundi]
-
 	for (int i = 0; i < NEXTBLOCKS; i++) next[i] = nullptr;
 	nextA = nextB = 0.0f;
 	timerNext.start();
@@ -456,14 +453,6 @@ void Tet3D::rotateZ(const bool ccw)
 
 // height
 
-int Tet3D::getHeight(const int x, const int y) const
-{
-	for (int z = field->dimZ - 1; z >= 0; z--)
-		if (!field->isEmpty(x, y, z))
-			return z + 1;
-	return 0;
-}
-
 int Tet3D::getHeight() const
 {
 	for (int z = field->dimZ - 1; z >= 0; z--)
@@ -501,6 +490,10 @@ void Tet3D::render() const
 		field->render();
 	}
 
+	// osvezi animaciju
+
+	block->anims.update();
+
 	// crtaj "senku" bloka
 
 	if (!paused && block != nullptr && drawShadows) renderShadow();
@@ -525,38 +518,122 @@ void Tet3D::render() const
 
 void Tet3D::renderShadow() const
 {
-	bool m[5][5]; // x, y
+	bool xy[5][5];
+	bool yz[5][5];
+	bool zx[5][5];
 
-	int x, y, z;
+	for (auto i = 0; i < 5; i++)
+		for (auto j = 0; j < 5; j++)
+		{
+			xy[i][j] = false;
+			yz[i][j] = false;
+			zx[i][j] = false;
+		}
 
-	for (x = 0; x < 5; x++)
-		for (y = 0; y < 5; y++)
-			m[x][y] = false;
-
-	for (z = 0; z < block->dimZ; z++)
-		for (y = 0; y < block->dimY; y++)
-			for (x = 0; x < block->dimX; x++)
-				m[x][y] = !block->isEmpty(x, y, z) || m[x][y];
+	for (auto z = 0; z < block->dimZ; z++)
+		for (auto y = 0; y < block->dimY; y++)
+			for (auto x = 0; x < block->dimX; x++)
+			{
+				const auto hasBrick = !block->isEmpty(x, y, z);
+				xy[x][y] = hasBrick || xy[x][y];
+				yz[y][z] = hasBrick || yz[y][z];
+				zx[z][x] = hasBrick || zx[z][x];
+			}
 
 	const float x0 = -field->dimX / 2.0f;
 	const float y0 = -field->dimY / 2.0f;
 	const float z0 = -field->dimZ / 2.0f;
 
+	const float xdim2 = block->dimX / 2.0f;
+	const float ydim2 = block->dimY / 2.0f;
+	const float zdim2 = block->dimZ / 2.0f;
+
 	glDisable(GL_LIGHTING);
 
-	glColor4f(0.0f, 0.0f, 0.0f, 0.15f);
-	for (x = 0; x < block->dimX; x++)
-		for (y = 0; y < block->dimY; y++)
-			if (m[x][y])
+	glColor4f(0.0f, 0.0f, 0.0f, 0.1f);
+
+	glPushMatrix();
+	glTranslatef(
+		x0 + xdim2 + blockX + block->anims.dx,
+		y0 + ydim2 + blockY + block->anims.dy,
+		0);
+	glRotatef(block->anims.rz, 0, 0, 1);
+	for (auto x = 0; x < block->dimX; x++)
+		for (auto y = 0; y < block->dimY; y++)
+			if (xy[x][y])
 			{
-				const int height = getHeight(blockX + x, blockY + y);
+				glPushMatrix();
+				glTranslatef(
+					-xdim2 + 0.5f + x,
+					-ydim2 + 0.5f + y,
+					0);
 				glBegin(GL_QUADS);
-					glVertex3f(x0 + blockX + x - 0.0f, y0 + blockY + y - 0.0f, z0 + height);
-					glVertex3f(x0 + blockX + x + 1.0f, y0 + blockY + y - 0.0f, z0 + height);
-					glVertex3f(x0 + blockX + x + 1.0f, y0 + blockY + y + 1.0f, z0 + height);
-					glVertex3f(x0 + blockX + x - 0.0f, y0 + blockY + y + 1.0f, z0 + height);
+					glVertex3f(-0.5f, -0.5f, z0);
+					glVertex3f(+0.5f, -0.5f, z0);
+					glVertex3f(+0.5f, +0.5f, z0);
+					glVertex3f(-0.5f, +0.5f, z0);
 				glEnd();
+				glPopMatrix();
 			}
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(
+		0,
+		y0 + ydim2 + blockY + block->anims.dy,
+		z0 + zdim2 + blockZ + block->anims.dz);
+	glRotatef(block->anims.rx, 1, 0, 0);
+	for (auto y = 0; y < block->dimX; y++)
+		for (auto z = 0; z < block->dimY; z++)
+			if (yz[y][z])
+			{
+				glPushMatrix();
+				glTranslatef(
+					0,
+					-ydim2 + 0.5f + y,
+					-zdim2 + 0.5f + z);
+				glBegin(GL_QUADS);
+					glVertex3f(x0, -0.5f, -0.5f);
+					glVertex3f(x0, +0.5f, -0.5f);
+					glVertex3f(x0, +0.5f, +0.5f);
+					glVertex3f(x0, -0.5f, +0.5f);
+					glVertex3f(x0+field->dimX, -0.5f, -0.5f);
+					glVertex3f(x0+field->dimX, -0.5f, +0.5f);
+					glVertex3f(x0+field->dimX, +0.5f, +0.5f);
+					glVertex3f(x0+field->dimX, +0.5f, -0.5f);
+				glEnd();
+				glPopMatrix();
+			}
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(
+		x0 + xdim2 + blockX + block->anims.dx,
+		0,
+		z0 + zdim2 + blockZ + block->anims.dz);
+	glRotatef(block->anims.ry, 0, 1, 0);
+	for (auto z = 0; z < block->dimZ; z++)
+		for (auto x = 0; x < block->dimX; x++)
+			if (zx[z][x])
+			{
+				glPushMatrix();
+				glTranslatef(
+					-xdim2 + 0.5f + x,
+					0,
+					-zdim2 + 0.5f + z);
+				glBegin(GL_QUADS);
+					glVertex3f(-0.5f, y0, -0.5f);
+					glVertex3f(-0.5f, y0, +0.5f);
+					glVertex3f(+0.5f, y0, +0.5f);
+					glVertex3f(+0.5f, y0, -0.5f);
+					glVertex3f(-0.5f, y0+field->dimY, -0.5f);
+					glVertex3f(+0.5f, y0+field->dimY, -0.5f);
+					glVertex3f(+0.5f, y0+field->dimY, +0.5f);
+					glVertex3f(-0.5f, y0+field->dimY, +0.5f);
+				glEnd();
+				glPopMatrix();
+			}
+	glPopMatrix();
 
 	glEnable(GL_LIGHTING);
 }
@@ -758,6 +835,9 @@ void Tet3D::renderHUDHeight() const
 				by1 -= dy;
 			else
 				break;
+
+		by0 += block->anims.dz * dy;
+		by1 += block->anims.dz * dy;
 
 		glColor4f(1.0f, 1.0f, 1.0f, colorHeight.getAlpha());
 		frame(x0, by0, x1, by1, 0.01f);

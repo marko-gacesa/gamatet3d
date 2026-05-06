@@ -33,8 +33,8 @@ private:
 	Timer timer;
 	Random random;
 
-	float animDuration;
-	float slideTime;
+	static constexpr float animDuration = 0.25f; // [sekundi]
+	static constexpr float slideTime = 0.55f; // [sekundi]
 
 	static constexpr int NEXTBLOCKS = 5;
 	static constexpr float NEXTSPAN = 0.8f;
@@ -77,7 +77,6 @@ private:
 	void drop1();
 	bool rotAdjust();
 
-	int getHeight(int x, int y) const;
 	int getHeight() const;
 
 	void renderShadow() const;
