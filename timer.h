@@ -36,7 +36,7 @@ public:
 	float getTime() const; // u sekundama
 	void addTime(float seconds);
 
-	static void setPeriod(long milisec) { ticksPerSecond = milisec; } // vreme izmedju dva poziva progress()
+	static void setPeriod(const long millis) { ticksPerSecond = millis; } // vreme izmedju dva poziva progress()
 	static void progress() { timer++; }
 };
 

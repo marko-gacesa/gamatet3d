@@ -24,8 +24,8 @@ public:
 	enum BlockSet { FLAT, BASIC, EXTENDED };
 
 private:
-	static constexpr int LEVELCOUNT = 11;
-	static float levelPause[LEVELCOUNT];
+	static constexpr int levelCount = 11;
+	static float levelPause[levelCount];
 
 	WalledBrickField* field;
 	BrickField* block;
@@ -36,19 +36,19 @@ private:
 	static constexpr float animDuration = 0.25f; // [sekundi]
 	static constexpr float slideTime = 0.55f; // [sekundi]
 
-	static constexpr int NEXTBLOCKS = 5;
-	static constexpr float NEXTSPAN = 0.8f;
+	static constexpr int nextBlockCount = 5;
+	static constexpr float nextBlocksSpan = 0.8f;
 	float nextScale = 1.0f;
 	float nextDeltaY = 0.20f;
-	BrickField* next[NEXTBLOCKS];
+	BrickField* next[nextBlockCount];
 	Timer timerNext;
 	AnimList nextAnimList;
 	float nextA;
 	float nextB;
 
-	int blockX;
-	int blockY;
-	int blockZ;
+	int blockX = 0;
+	int blockY = 0;
+	int blockZ = 0;
 
 	BlockSet blockSet;
 

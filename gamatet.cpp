@@ -415,17 +415,6 @@ void draw()
 	glLightfv(GL_LIGHT1, GL_POSITION, LightPosition);
 	glLightfv(GL_LIGHT2, GL_POSITION, LightPositionMenu);
 
-	/* draw light source
-	glPushMatrix();
-	glTranslatef(LightPosition[0], LightPosition[1], LightPosition[2]);
-	//glTranslatef(LightPositionMenu[0], LightPositionMenu[1], LightPositionMenu[2]);
-	glColor4f(1.0, 1.0, 0, 1.0);
-	glDisable(GL_LIGHTING);
-	glutSolidSphere(0.1, 10, 10);
-	glEnable(GL_LIGHTING);
-	glPopMatrix();
-	//*/
-
 	if (Game::mode == Game::MODE_GAME)
 	{
 		// draw field...

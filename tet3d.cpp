@@ -8,7 +8,6 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include <utility>
 #include <cstdio>
 #include <GL/gl.h>
 #include "brick.h"
@@ -21,7 +20,7 @@
 //-------//
 
 //                                       0     1     2     3     4     5     6     7     8     9     X
-float Tet3D::levelPause[LEVELCOUNT] = { 4.0f, 3.4f, 2.8f, 2.3f, 1.8f, 1.4f, 1.0f, 0.7f, 0.4f, 0.2f, 0.1f };
+float Tet3D::levelPause[levelCount] = { 4.0f, 3.4f, 2.8f, 2.3f, 1.8f, 1.4f, 1.0f, 0.7f, 0.4f, 0.2f, 0.1f };
 
 // konstruktor
 
@@ -32,7 +31,7 @@ Tet3D::Tet3D() : field(nullptr), block(nullptr)
 	playing = false;
 	paused = false;
 
-	for (int i = 0; i < NEXTBLOCKS; i++) next[i] = nullptr;
+	for (int i = 0; i < nextBlockCount; i++) next[i] = nullptr;
 	nextA = nextB = 0.0f;
 	timerNext.start();
 
@@ -51,7 +50,7 @@ Tet3D::~Tet3D()
 {
 	delete field;
 	delete block;
-	for (int i = 0; i < NEXTBLOCKS; i++) delete next[i];
+	for (int i = 0; i < nextBlockCount; i++) delete next[i];
 }
 
 // metode
@@ -89,10 +88,10 @@ void Tet3D::generateField(const int dimX, const int dimY, const int dimZ, const 
 
 	blockSet = bset;
 
-	nextDeltaY = (dimY * NEXTSPAN) / (NEXTBLOCKS - 1);
-	nextScale = nextDeltaY / NEXTBLOCKS;
+	nextDeltaY = (dimY * nextBlocksSpan) / (nextBlockCount - 1);
+	nextScale = nextDeltaY / nextBlockCount;
 
-	for (int i = 0; i < NEXTBLOCKS; i++)
+	for (int i = 0; i < nextBlockCount; i++)
 	{
 		delete next[i];
 		next[i] = createBlock();
@@ -100,14 +99,6 @@ void Tet3D::generateField(const int dimX, const int dimY, const int dimZ, const 
 
 	timer.stop();
 	timer.reset();
-
-	/*
-	for (int z = 0; z < 20; z++)
-		for (int x = 0; x < field->dimX; x++)
-			for (int y = 0; y < field->dimY; y++)
-				field->set(x, y, z, new Brick());
-	paintBricks();
-	//*/
 }
 
 void Tet3D::deleteField()
@@ -118,7 +109,7 @@ void Tet3D::deleteField()
 	field = nullptr;
 	block = nullptr;
 
-	for (int i = 0; i < NEXTBLOCKS; i++)
+	for (int i = 0; i < nextBlockCount; i++)
 		if (next[i] != nullptr)
 		{
 			delete next[i];
@@ -150,8 +141,8 @@ void Tet3D::nextBlock()
 
 	block = next[0];
 
-	for (int i = 1; i < NEXTBLOCKS; i++) next[i - 1] = next[i];
-	next[NEXTBLOCKS - 1] = createBlock();
+	for (int i = 1; i < nextBlockCount; i++) next[i - 1] = next[i];
+	next[nextBlockCount - 1] = createBlock();
 	nextAnimList.add(new AnimQuad(0, -nextDeltaY, 0, animDuration));
 
 	for (int z = 0; z < block->dimZ; z++)
@@ -365,8 +356,7 @@ void Tet3D::drop()
 		// block slide
 
 		timer.reset();
-		timer.addTime(levelPause[level % LEVELCOUNT] - slideTime);
-		//timer.addTime(levelPause[level % LEVELCOUNT] * (1.0f - slideTime));
+		timer.addTime(levelPause[level % levelCount] - slideTime);
 	}
 }
 
@@ -467,7 +457,7 @@ int Tet3D::getHeight() const
 
 void Tet3D::animate()
 {
-	if (playing && !paused && timer.getTime() > levelPause[level % LEVELCOUNT]) drop1();
+	if (playing && !paused && timer.getTime() > levelPause[level % levelCount]) drop1();
 
 	nextAnimList.update();
 	if (timerNext.getTime() > 0.1)
@@ -490,13 +480,13 @@ void Tet3D::render() const
 		field->render();
 	}
 
-	// osvezi animaciju
-
-	block->anims.update();
-
 	// crtaj "senku" bloka
 
-	if (!paused && block != nullptr && drawShadows) renderShadow();
+	if (!paused && block != nullptr && drawShadows)
+	{
+		block->anims.update();
+		renderShadow();
+	}
 
 	// crtaj blok
 
@@ -668,17 +658,17 @@ void Tet3D::renderNextBlocks() const
 	if (field == nullptr) return;
 
 	const auto x =  field->dimX * 0.5f + 0.5f;
-	const auto y = -field->dimY * NEXTSPAN * 0.5f + nextAnimList.dy;
+	const auto y = -field->dimY * nextBlocksSpan * 0.5f + nextAnimList.dy;
 	const auto z =  field->dimZ * 0.5f;
 
 	auto s = nextScale;
 
 	glPushMatrix();
 	glTranslatef(x, y, z);
-	for (int i = 0; i < NEXTBLOCKS; i++)
+	for (int i = 0; i < nextBlockCount; i++)
 		if (next[i] != nullptr)
 		{
-			const auto div = static_cast<float>(i) / NEXTBLOCKS;
+			const auto div = static_cast<float>(i) / nextBlockCount;
 
 			glPushMatrix();
 			glRotatef(nextB, div, 1, 0);
@@ -715,7 +705,7 @@ void Tet3D::renderHUD() const
 	static constexpr float dy1 = 0.24f;
 	static constexpr float dy2 = dy1 / 2;
 	static constexpr float dy3 = dy1 / 3;
-	static constexpr float dy4 = dy1 / 4;
+	static constexpr float dy4 = dy2 / 2;
 	static constexpr float dy5 = dy1 / 5;
 	static constexpr float dy6 = dy1 / 6;
 	static constexpr float dy7 = dy1 / 7;
