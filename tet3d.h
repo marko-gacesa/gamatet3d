@@ -11,16 +11,12 @@
 #ifndef _TET3D_H_
 #define _TET3D_H_
 
-#include <utility>
 #include "timer.h"
 #include "random.h"
 #include "brickfield.h"
 #include "color.h"
 #include "anim.h"
 
-typedef struct {
-	float x, y;
-} xy;
 
 class Tet3D
 {
@@ -39,10 +35,11 @@ private:
 
 	float animDuration;
 	float slideTime;
-	float blockAlpha;
 
-	static constexpr int NEXTBLOCKS = 10;
-	static constexpr float NEXTBLOCKY = 0.20f;
+	static constexpr int NEXTBLOCKS = 5;
+	static constexpr float NEXTSPAN = 0.8f;
+	float nextScale = 1.0f;
+	float nextDeltaY = 0.20f;
 	BrickField* next[NEXTBLOCKS];
 	Timer timerNext;
 	AnimList nextAnimList;
@@ -55,8 +52,11 @@ private:
 
 	BlockSet blockSet;
 
-	Color colorHUD;
-	Color colorNext;
+	const Color colorHUD = Color(0.92f, 0.92f, 0.92f, 1.0f);
+	const Color colorHeight = Color(0.55f, 0.5f, 0.4f, 0.7f);
+	const Color colorActive = Color(1.0f, 1.0f, 0.6f, 0.7f);
+	const Color colorNext = Color(1.0f, 1.0f, 0.6f, 1.0f);
+	static constexpr float colorFieldAlpha = 0.6;
 
 	bool playing;
 	bool paused;
@@ -134,8 +134,8 @@ public:
 
 	void render() const;
 
-	xy renderHUD() const;
-	void renderHUDNext(float posX, float posY) const;
+	void renderNextBlocks() const;
+	void renderHUD() const;
 	void renderHUDHeight() const;
 };
 

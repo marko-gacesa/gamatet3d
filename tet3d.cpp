@@ -34,14 +34,10 @@ Tet3D::Tet3D() : field(nullptr), block(nullptr)
 
 	animDuration = 0.25f; // [sekundi]
 	slideTime = 0.55f; // [sekundi]
-	blockAlpha = 0.85f; // 0..1
 
 	for (int i = 0; i < NEXTBLOCKS; i++) next[i] = nullptr;
 	nextA = nextB = 0.0f;
 	timerNext.start();
-
-	colorHUD.set(0.55f, 0.5f, 0.4f, 0.7f);
-	colorNext.set(0.7f, 0.8f, 0.9f, 1.0f);
 
 	score_count = 0;
 	block_count = 0;
@@ -74,11 +70,11 @@ void Tet3D::paintBricks() const
 		for (int x = 0; x < field->dimX; x++)
 			for (int y = 0; y < field->dimY; y++)
 			{
-				Brick* b = field->get(x, y ,z);
+				Brick* b = field->get(x, y, z);
 				if (b == nullptr) continue;
 
 				const int color = z % brickColorsNum;
-				b->color.set(brickColorsR[color], brickColorsG[color], brickColorsB[color], 1.0f);
+				b->color.set(brickColorsR[color], brickColorsG[color], brickColorsB[color], colorFieldAlpha);
 			}
 }
 
@@ -95,6 +91,9 @@ void Tet3D::generateField(const int dimX, const int dimY, const int dimZ, const 
 	paused = false;
 
 	blockSet = bset;
+
+	nextDeltaY = (dimY * NEXTSPAN) / (NEXTBLOCKS - 1);
+	nextScale = nextDeltaY / NEXTBLOCKS;
 
 	for (int i = 0; i < NEXTBLOCKS; i++)
 	{
@@ -156,14 +155,14 @@ void Tet3D::nextBlock()
 
 	for (int i = 1; i < NEXTBLOCKS; i++) next[i - 1] = next[i];
 	next[NEXTBLOCKS - 1] = createBlock();
-	nextAnimList.add(new AnimQuad(0, NEXTBLOCKY, 0, animDuration));
+	nextAnimList.add(new AnimQuad(0, -nextDeltaY, 0, animDuration));
 
 	for (int z = 0; z < block->dimZ; z++)
 		for (int y = 0; y < block->dimY; y++)
 			for (int x = 0; x < block->dimX; x++)
 			{
 				Brick* q = block->get(x, y, z);
-				if (q != nullptr) q->color.set(0.9f, 0.9f, 0.6f, blockAlpha);
+				if (q != nullptr) q->color.set(colorActive);
 			}
 
 	// postavi u donji levi ugao
@@ -587,25 +586,37 @@ void frame(const float x1, const float y1, const float x2, const float y2, const
 	glEnd();
 }
 
-void Tet3D::renderHUDNext(const float posX, const float posY) const
+void Tet3D::renderNextBlocks() const
 {
+	if (field == nullptr) return;
+
+	const auto x =  field->dimX * 0.5f + 0.5f;
+	const auto y = -field->dimY * NEXTSPAN * 0.5f + nextAnimList.dy;
+	const auto z =  field->dimZ * 0.5f;
+
+	auto s = nextScale;
+
 	glPushMatrix();
-	glTranslatef(posX, posY, 0.0f);
-	for (int i = 0; i < NEXTBLOCKS && i < 5; i++)
+	glTranslatef(x, y, z);
+	for (int i = 0; i < NEXTBLOCKS; i++)
 		if (next[i] != nullptr)
 		{
+			const auto div = static_cast<float>(i) / NEXTBLOCKS;
+
 			glPushMatrix();
-			glRotatef(nextB, 0, 1, 0);
-			glRotatef(nextA, 1, 0, 1);
-			glScalef(0.05f, 0.05f, 0.05f);
+			glRotatef(nextB, div, 1, 0);
+			glRotatef(nextA, 1, 0, div);
+			glScalef(s, s, s);
 			next[i]->draw();
 			glPopMatrix();
-			glTranslatef(0.0f, -NEXTBLOCKY, 0.0f);
+			glTranslatef(0.0f, nextDeltaY, 0.0f);
+
+			s *= 0.75f;
 		}
 	glPopMatrix();
 }
 
-xy Tet3D::renderHUD() const
+void Tet3D::renderHUD() const
 {
 	colorHUD.activate();
 
@@ -673,16 +684,6 @@ xy Tet3D::renderHUD() const
 	case BASIC:    snprintf(cbuffer, 7, "%5s",  "basic"); MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy5, dy5); break;
 	case EXTENDED: snprintf(cbuffer, 7, "%6s", "extend"); MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy6, dy6); break;
 	}
-	y_hud -= dy4;
-
-	//---//
-
-	MenuChar::drawString2D("next", x_hud, y_hud -= dy4, dy4);
-
-	const auto blocksX = x_hud + dy2;
-	const auto blocksY = y_hud - 0.1f + nextAnimList.dy;
-
-	return xy{ blocksX, blocksY };
 }
 
 void Tet3D::renderHUDHeight() const
@@ -707,10 +708,10 @@ void Tet3D::renderHUDHeight() const
 		if (z < height)
 		{
 			const int color = z % brickColorsNum;
-			glColor4f(brickColorsR[color], brickColorsG[color], brickColorsB[color], colorHUD.getAlpha());
+			glColor4f(brickColorsR[color], brickColorsG[color], brickColorsB[color], colorHeight.getAlpha());
 		}
 		else
-			glColor4f(0.0f, 0.0f, 0.0f, colorHUD.getAlpha());
+			glColor4f(0.0f, 0.0f, 0.0f, colorHeight.getAlpha());
 
 		glTexCoord2f(0.0f, 0.0f); glVertex2f(x0     , ty     );
 		glTexCoord2f(1.0f, 0.0f); glVertex2f(x0 + dx, ty     );
@@ -723,7 +724,7 @@ void Tet3D::renderHUDHeight() const
 
 	ty = y0;
 
-	colorHUD.activate();
+	colorHeight.activate();
 	frame(x0, y0, x1, y1, 0.02f);
 
 	glColor4f(1.0f, 1.0f, 1.0f, 0.2f);
@@ -758,7 +759,7 @@ void Tet3D::renderHUDHeight() const
 			else
 				break;
 
-		glColor4f(1.0f, 1.0f, 1.0f, colorHUD.getAlpha());
+		glColor4f(1.0f, 1.0f, 1.0f, colorHeight.getAlpha());
 		frame(x0, by0, x1, by1, 0.01f);
 	}
 }

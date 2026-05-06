@@ -434,6 +434,15 @@ void draw()
 		Game::tet->render();
 		glDisable(GL_LIGHT1);
 
+		glDisable(GL_LIGHTING);
+
+		// next blocks...
+
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glDisable(GL_BLEND);
+		Game::tet->renderNextBlocks();
+		glEnable(GL_BLEND);
+
 		// HUD
 
 		glMatrixMode(GL_PROJECTION);
@@ -442,21 +451,18 @@ void draw()
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		glDisable(GL_LIGHTING);
 		glDisable(GL_DEPTH_TEST);
 		glDepthMask(GL_FALSE);
 
 		Game::tet->renderHUDHeight();
 
-		glDisable(GL_BLEND);
-		const auto p = Game::tet->renderHUD();
+		glBlendFunc(GL_ONE_MINUS_SRC_COLOR, GL_SRC_COLOR);
+		Game::tet->renderHUD();
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glDepthMask(GL_TRUE);
 		glEnable(GL_DEPTH_TEST);
 
-		Game::tet->renderHUDNext(p.x, p.y);
-
-		glEnable(GL_BLEND);
 		glEnable(GL_LIGHTING);
 
 		glMatrixMode(GL_PROJECTION);
@@ -485,7 +491,7 @@ void draw()
 // timerFunc //
 //-----------//
 
-void timerFunc(int value)
+void timerFunc(const int value)
 {
 	if (value == 1)
 	{
