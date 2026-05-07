@@ -8,8 +8,18 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#ifdef _WIN32
+	#include <windows.h>
+#endif
+
+#ifdef __APPLE__
+	#define GL_SILENCE_DEPRECATION
+	#include <OpenGL/gl.h>
+#else
+	#include <GL/gl.h>
+#endif
+
 #include <cstdio>
-#include <GL/gl.h>
 #include "brick.h"
 #include "brickfield.h"
 #include "tet3d.h"
@@ -720,7 +730,7 @@ void Tet3D::renderHUD() const
 	MenuChar::drawString2D("level", x_hud, y_hud -= dy5, dy5);
 	MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy3, dy3);
 	y_hud -= dy4;
-	snprintf(cbuffer, 7, "%06d", static_cast<uint>(score_count) % 1000000);
+	snprintf(cbuffer, 7, "%06d", static_cast<unsigned int>(score_count) % 1000000);
 	MenuChar::drawString2D(" score ", x_hud, y_hud -= dy7, dy7);
 	MenuChar::drawString2D(cbuffer, x_hud, y_hud -= dy6, dy6);
 	y_hud -= dy8;

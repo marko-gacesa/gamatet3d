@@ -11,10 +11,19 @@
 #ifndef _MENU_H_
 #define _MENU_H_
 
+#ifdef _WIN32
+	#include <windows.h>
+#endif
+
+#ifdef __APPLE__
+	#define GL_SILENCE_DEPRECATION
+	#include <OpenGL/gl.h>
+#else
+	#include <GL/gl.h>
+#endif
 
 #include <cstdio>
 #include <cstring>
-#include <GL/gl.h>
 #include "timer.h"
 #include "tet3d.h"
 

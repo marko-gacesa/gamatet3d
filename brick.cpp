@@ -8,7 +8,17 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include <GL/gl.h>
+#ifdef _WIN32
+	#include <windows.h>
+#endif
+
+#ifdef __APPLE__
+	#define GL_SILENCE_DEPRECATION
+	#include <OpenGL/gl.h>
+#else
+	#include <GL/gl.h>
+#endif
+
 #include "brick.h"
 
 GLuint Brick::texture = 0;

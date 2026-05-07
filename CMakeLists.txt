@@ -1,12 +1,9 @@
-cmake_minimum_required(VERSION 4.2)
+cmake_minimum_required(VERSION 3.10)
 project(gamatet3d)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 11)
 
-# Find OpenGL (GL + GLU)
 find_package(OpenGL REQUIRED)
-
-# Find GLUT
 find_package(GLUT REQUIRED)
 
 include_directories(.)
@@ -31,12 +28,11 @@ add_executable(gamatet3d
 
 target_link_libraries(gamatet3d
         OpenGL::GL
-        OpenGL::GLU
         GLUT::GLUT
 )
 
 add_custom_command(TARGET gamatet3d POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E create_symlink
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${CMAKE_SOURCE_DIR}/texture
         $<TARGET_FILE_DIR:gamatet3d>/texture
 )

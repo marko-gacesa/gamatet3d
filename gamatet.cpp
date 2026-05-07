@@ -8,11 +8,22 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#ifdef _WIN32
+	#include <windows.h>
+#endif
+
+#ifdef __APPLE__
+	#define GL_SILENCE_DEPRECATION
+	#include <OpenGL/gl.h>
+	#include <GLUT/glut.h>
+#else
+	#include <GL/gl.h>
+	#include <GL/glut.h>
+#endif
+
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
-#include <GL/glut.h>
-#include <GL/gl.h>
 
 #include "timer.h"
 #include "tet3d.h"
