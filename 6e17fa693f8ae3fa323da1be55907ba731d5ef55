@@ -1,0 +1,144 @@
+menu.cpp
+  human 11-23
+tet3d.cpp
+  human 11-21,733
+brick.h
+  human 14-24
+anim.cpp
+  human 11-21
+menu.h
+  human 14-23
+brick.cpp
+  human 11-21
+color.h
+  human 14-23
+gamatet.cpp
+  human 11-23
+---
+{
+  "attestations": [
+    {
+      "entries": [
+        {
+          "accepted_lines": 13,
+          "added_lines": 13,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "11-23",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "menu.cpp"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 12,
+          "added_lines": 12,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "11-21,733",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "tet3d.cpp"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 11,
+          "added_lines": 11,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "14-24",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "brick.h"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 11,
+          "added_lines": 11,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "11-21",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "anim.cpp"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 10,
+          "added_lines": 10,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "14-23",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "menu.h"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 11,
+          "added_lines": 11,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "11-21",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "brick.cpp"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 10,
+          "added_lines": 10,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "14-23",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "color.h"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 13,
+          "added_lines": 13,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "11-23",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "gamatet.cpp"
+    }
+  ],
+  "base_commit_sha": "3597a6c37beff11042b0affabd8fb2706287b836",
+  "branch": "mac_win",
+  "commit_sha": "6e17fa693f8ae3fa323da1be55907ba731d5ef55",
+  "commit_time": "2026-05-07T19:24:52+02:00",
+  "commit_type": "direct_commit",
+  "git_ai_version": "1.4.2",
+  "prompts": {
+    "human": {
+      "accepted_lines": 91,
+      "agent_id": null,
+      "human_author": "Marko Gaćeša <markogacesa@hotmail.com>",
+      "messages": [],
+      "overriden_lines": 0,
+      "total_additions": 91,
+      "total_deletions": 0
+    }
+  },
+  "repo": "git@github.com:marko-gacesa/gamatet3d.git",
+  "schema_version": "authorship/3.0.0"
+}
