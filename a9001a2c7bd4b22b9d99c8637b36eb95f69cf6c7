@@ -1,0 +1,156 @@
+brick.h
+  human 14-24
+tet3d.cpp
+  human 11-21,733
+brick.cpp
+  human 11-21
+color.h
+  human 14-23
+CMakeLists.txt
+  human 1,4
+gamatet.cpp
+  human 11-23
+anim.cpp
+  human 11-21
+menu.cpp
+  human 11-23
+menu.h
+  human 14-23
+---
+{
+  "attestations": [
+    {
+      "entries": [
+        {
+          "accepted_lines": 11,
+          "added_lines": 11,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "14-24",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "brick.h"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 12,
+          "added_lines": 12,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "11-21,733",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "tet3d.cpp"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 11,
+          "added_lines": 11,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "11-21",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "brick.cpp"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 10,
+          "added_lines": 10,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "14-23",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "color.h"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 2,
+          "added_lines": 2,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "1,4",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "CMakeLists.txt"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 13,
+          "added_lines": 13,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "11-23",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "gamatet.cpp"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 11,
+          "added_lines": 11,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "11-21",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "anim.cpp"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 13,
+          "added_lines": 13,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "11-23",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "menu.cpp"
+    },
+    {
+      "entries": [
+        {
+          "accepted_lines": 10,
+          "added_lines": 10,
+          "deleted_lines": 0,
+          "hash": "human",
+          "lines": "14-23",
+          "overridden_lines": 0
+        }
+      ],
+      "file": "menu.h"
+    }
+  ],
+  "base_commit_sha": "a9001a2c7bd4b22b9d99c8637b36eb95f69cf6c7",
+  "commit_sha": "a9001a2c7bd4b22b9d99c8637b36eb95f69cf6c7",
+  "commit_type": "commit_amend",
+  "git_ai_version": "1.4.2",
+  "prompts": {
+    "human": {
+      "accepted_lines": 93,
+      "agent_id": null,
+      "human_author": null,
+      "messages": [],
+      "overriden_lines": 0,
+      "total_additions": 93,
+      "total_deletions": 0
+    }
+  },
+  "schema_version": "authorship/3.0.0"
+}
