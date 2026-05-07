@@ -213,7 +213,7 @@ void Menu::loadTexture()
 	glGenTextures(1, &texture);
 
 	int width, height, channels;
-	unsigned char* data = stbi_load("texture/back.png", &width, &height, &channels, 0);
+	unsigned char* data = stbi_load("texture/back.jpg", &width, &height, &channels, 0);
 	if (data == nullptr) return;
 
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -299,6 +299,10 @@ void Menu::draw() const
 		glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f,  1.0);
 	glEnd();
 
+	drawTitle();
+
+	//
+
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -350,6 +354,10 @@ void Menu::drawHelp()
 		glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f,  1.0);
 	glEnd();
 
+	drawTitle();
+
+	//
+
 	glColor4f(0.7f, 0.7f, 0.7f, 0.4f);
 
 	float y = 0.3f;
@@ -375,15 +383,21 @@ void Menu::drawHelp()
 	MenuChar::drawString2Dc("         full screen f1        ", y, 0.05f); y += dy;
 	MenuChar::drawString2Dc("                               ", y, 0.05f); y += dy;
 
-	glColor4f(0.4f, 0.4f, 0.4f, 0.4f);
-
-	y += dy;
-	MenuChar::drawString2Dc("gamatet 3d by marko gacesa 2007", y, 0.05f); y += dy;
-
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_LIGHTING);
+}
+
+void Menu::drawTitle()
+{
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glBlendFunc(GL_ONE_MINUS_SRC_COLOR, GL_SRC_COLOR);
+	MenuChar::drawString2Dc("gamatet3d", 0.7f, 0.16f);
+	MenuChar::drawString2Dc("by marko gacesa 2007", 0.6f, 0.07f);
+	MenuChar::drawString2Dc("a clone of blockout from 1989", 0.55f, 0.03f);
+	MenuChar::drawString2Dc("refurbished and open sourced in 2026", -0.97f, 0.03f);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }

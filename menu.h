@@ -168,6 +168,7 @@ public:
 	void draw() const;
 
 	static void drawHelp();
+	static void drawTitle();
 };
 
 

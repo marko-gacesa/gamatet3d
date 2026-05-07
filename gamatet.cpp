@@ -309,8 +309,8 @@ void LoadGLTexture(const char* textureName, GLuint *texID)
 
 void LoadTextures()
 {
-	LoadGLTexture("texture/brick.png", &Brick::texture);
-	LoadGLTexture("texture/wall.png", &WalledBrickField::texture);
+	LoadGLTexture("texture/brick.jpg", &Brick::texture);
+	LoadGLTexture("texture/wall.jpg", &WalledBrickField::texture);
 	MenuChar::loadTextures();
 	Menu::loadTexture();
 }
